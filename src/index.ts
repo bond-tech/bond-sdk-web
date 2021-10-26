@@ -1,1 +1,1 @@
-export * from './bond-sdk-cards';
+export * as BondCards from './bond-sdk-cards';

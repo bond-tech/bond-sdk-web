@@ -4,12 +4,12 @@
  * @class
  */
 class BondCards {
-  BONDSTUDIO;
-  internalShow;
+  BONDSTUDIO: string;
+  internalShow: any;
   resetFormInstance;
   internalForm;
   fieldEnum;
-  firstrun;
+  firstrun: boolean;
 
   /**
    * Create a BondCards instance.
@@ -17,7 +17,7 @@ class BondCards {
    * @param {boolean} [live=true] Set to True to work with live data.
    * False for sandbox data
    */
-  constructor({ live = false }) {
+  constructor({ live = false }: { live: boolean }) {
 
     this.BONDSTUDIO = '/api/v0/cards';
 
@@ -117,6 +117,13 @@ class BondCards {
     field,
     htmlWrapper,
     format,
+  }: {
+    cardId: string;
+    identity: string;
+    authorization: string;
+    field: string;
+    htmlWrapper: string;
+    format: any;
   }) {
     return {
       method: 'GET',
@@ -176,6 +183,15 @@ class BondCards {
     htmlSelector,
     format = {},
     css = {},
+  }: {
+    cardId: string;
+    identity: string;
+    authorization: string;
+    field: string;
+    htmlWrapper?: string;
+    htmlSelector: string;
+    format?: {};
+    css?: {};
   }) {
     const requestParams = this._createRequestParams({
       cardId,
@@ -220,7 +236,12 @@ class BondCards {
    * @return {Promise} Returns a Promise that, when fulfilled,
    * will either return an iFrame with the appropriate data or an error.
    */
-  showMultiple({ cardId, identity, authorization, fields }) {
+  showMultiple({ cardId, identity, authorization, fields }: {
+    cardId: string;
+    identity: string;
+    authorization: string;
+    fields: Object;
+  }) {
     const requestedFields = Object.entries(fields).filter(([field]) =>
       Object.keys(this.fieldEnum).includes(field)
     );
@@ -355,6 +376,14 @@ class BondCards {
     htmlWrapper = 'text',
     htmlSelector,
     css = {},
+  }: {
+    cardId: string;
+    identity: string;
+    authorization: string;
+    reset?: boolean;
+    htmlWrapper?: string;
+    htmlSelector: string;
+    css?: {};
   }) {
     const requestParams = {
       method: reset ? 'PATCH' : 'GET',
@@ -411,6 +440,21 @@ class BondCards {
     readOnly,
     autoFocus,
     hideValue = true,
+  }: {
+    selector: string;
+    type: string;
+    css?: {};
+    placeholder: string;
+    successColor: string;
+    errorColor: string;
+    color: string;
+    lineHeight: string;
+    fontSize: string;
+    fontFamily: any;
+    disabled: boolean;
+    readOnly: boolean;
+    autoFocus: boolean;
+    hideValue?: boolean;
   }) {
     const validations: any[] = type === 'new_pin' ? ['required'] : [];
     if (type === 'confirm_pin')
@@ -461,7 +505,13 @@ class BondCards {
    * @return {Promise} Returns a Promise that, when fulfilled,
    * will either return an iFrame with the appropriate data or an error.
    */
-  copy({ iframe, htmlSelector, css = {}, text = 'Copy', callback = () => {} }) {
+  copy({ iframe, htmlSelector, css = {}, text = 'Copy', callback = () => {} }: {
+    iframe: any;
+    htmlSelector: string;
+    css?: {};
+    text?: string;
+    callback?: () => void;
+  }) {
     return new Promise((resolve, reject) => {
       try {
         const copyButton = this.internalShow.copyFrom(
@@ -513,6 +563,14 @@ class BondCards {
     newPin,
     successCallback,
     errorCallback,
+  }: {
+    cardId: string;
+    identity: string;
+    authorization: string;
+    currentPin?: string;
+    newPin: string;
+    successCallback: any;
+    errorCallback: any;
   }) {
     const options = {
       method: 'POST',

@@ -12,7 +12,7 @@ const data = {
 const css = {
   "font-family": "Arial, sans-serif",
   "font-size": "14px",
-  color: "rgb(96,107,243)",
+  color: "#606BF3FF",
 };
 
 const loadingHelper = (field, status) => {

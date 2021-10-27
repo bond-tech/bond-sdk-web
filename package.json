@@ -11,6 +11,9 @@
     "cypress:open": "npx cypress open",
     "cypress:run": "npx cypress run --headless --browser chrome"
   },
+  "engines": {
+    "node": ">=6.3.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bond-tech/bond-sdk-web.git"

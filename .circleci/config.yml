@@ -135,7 +135,7 @@ workflows:
           requires: 
             - build
 
-  daily_integration_varification:
+  daily_integration_verification:
     triggers:
         - schedule:
             cron: "45 11 * * *"

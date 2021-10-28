@@ -1,3 +1,11 @@
+type ValidationType = string | {type: string, params: { field: string, function: string }};
+
+type Format = {
+  replaceThis: string,
+  withThis: string,
+  count?: number
+};
+
 /**
  * @classdesc Represents the Bond Cards SDK. It allows developers to make
  * all calls to the APIs that securely store PCI data with a single function.
@@ -59,7 +67,7 @@ class BondCards {
     this.firstrun = true;
   }
 
-  _internalShowField(requestParams) {
+  _internalShowField(requestParams: {}) {
     // To allow multiple show/hides, it seems show.js needs
     // a field we leave rendered (but we'll keep it hidden)
     if (this.firstrun) {
@@ -84,7 +92,7 @@ class BondCards {
    * @return {Promise} Returns a Promise that, when fulfilled,
    * will either return an iFrame with the appropriate data or an error.
    */
-  _delayedPromise(requestParams, htmlSelector, css) {
+  _delayedPromise(requestParams: {}, htmlSelector: string, css: {}) {
     return new Promise((resolve, reject) => {
       const newIframe = this.internalShow.request(requestParams);
       if (newIframe) {
@@ -123,7 +131,7 @@ class BondCards {
     authorization: string;
     field: string;
     htmlWrapper: string;
-    format: any;
+    format: Format;
   }) {
     return {
       method: 'GET',
@@ -181,7 +189,7 @@ class BondCards {
     field,
     htmlWrapper = 'text',
     htmlSelector,
-    format = {},
+    format = {} as Format,
     css = {},
   }: {
     cardId: string;
@@ -190,7 +198,7 @@ class BondCards {
     field: string;
     htmlWrapper?: string;
     htmlSelector: string;
-    format?: {};
+    format?: Format;
     css?: {};
   }) {
     const requestParams = this._createRequestParams({
@@ -240,7 +248,12 @@ class BondCards {
     cardId: string;
     identity: string;
     authorization: string;
-    fields: Object;
+    fields: Record<string, {
+      htmlSelector: string,
+      htmlWrapper?: string,
+      format: Format,
+      css?: {}
+    }>;
   }) {
     const requestedFields = Object.entries(fields).filter(([field]) =>
       Object.keys(this.fieldEnum).includes(field)
@@ -255,7 +268,7 @@ class BondCards {
     }
 
     const requests = requestedFields.map(
-      ([field, { htmlWrapper = 'text', format = {} }]: any) => {
+      ([field, { htmlWrapper = 'text', format = {} }]) => {
         return {
           method: 'GET',
           headers: {
@@ -450,13 +463,13 @@ class BondCards {
     color: string;
     lineHeight: string;
     fontSize: string;
-    fontFamily: any;
+    fontFamily: string;
     disabled: boolean;
     readOnly: boolean;
     autoFocus: boolean;
     hideValue?: boolean;
   }) {
-    const validations: any[] = type === 'new_pin' ? ['required'] : [];
+    const validations: Array<ValidationType> = type === 'new_pin' ? ['required'] : [];
     if (type === 'confirm_pin')
       validations.push({
         type: 'compareValue',
@@ -506,11 +519,11 @@ class BondCards {
    * will either return an iFrame with the appropriate data or an error.
    */
   copy({ iframe, htmlSelector, css = {}, text = 'Copy', callback = () => {} }: {
-    iframe: any;
+    iframe: HTMLIFrameElement;
     htmlSelector: string;
     css?: {};
     text?: string;
-    callback?: () => void;
+    callback?: (status: string) => void;
   }) {
     return new Promise((resolve, reject) => {
       try {
@@ -569,8 +582,8 @@ class BondCards {
     authorization: string;
     currentPin?: string;
     newPin: string;
-    successCallback: any;
-    errorCallback: any;
+    successCallback: (status: number, data: object) => void;
+    errorCallback: (errors: Record<string, object>) => void;
   }) {
     const options = {
       method: 'POST',

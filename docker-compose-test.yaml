@@ -2,6 +2,10 @@ version: '3.8'
 services:
   client:
     environment:
+      - BOND_ENV=sandbox.staging
+      - SERVER_ENDPOINT=https://sandbox.staging.bond.tech/api/v0/accounts
+      - ACCOUNT_ID=48bfae32-c1f6-42cc-ab42-fe6e50904d11
+      - CYPRESS_BASE_URL=http://localhost:8080
       - CLIENT_ENDPOINT=http://localhost:8080
       - IDENTITY=${CYPRESS_IDENTITY}
       - AUTHORIZATION=${CYPRESS_AUTHORIZATION}

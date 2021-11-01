@@ -17,7 +17,7 @@ class BondExternalAccounts {
    * @constructor
    * @param {BondEnvType} bondEnv Set bond environment.
    */
-  constructor({ bondEnv = 'api' }) {
+  constructor({ bondEnv = 'api' }: { bondEnv: string }) {
     // can be sandbox.dev, api.dev, sandbox(prod), api(prod), api.staging, sandbox.staging.
     this.bondEnv = bondEnv;
     // can be production, sandbox
@@ -68,7 +68,7 @@ class BondExternalAccounts {
     });
   };
 
-  _createAccessToken(accountId, identity, authorization, public_token, metadata, data) {
+  _createAccessToken(accountId: string, identity: string, authorization: string, public_token: string, metadata, data) {
     return new Promise((resolve, reject) => {
       const verification_status = metadata.account.verification_status || 'instantly_verified';
       const external_account_id = metadata.account.id;
@@ -118,7 +118,7 @@ class BondExternalAccounts {
    * @param {String} identity Set identity token.
    * @param {String} authorization Set authorization token.
    */
-  linkAccount({ accountId, identity, authorization }) {
+  linkAccount({ accountId, identity, authorization }: { accountId: string, identity: string, authorization: string  }) {
     return fetch(`${this.bondHost}/api/v0/accounts/${accountId}/external_accounts/plaid`, {
         method: 'GET',
         headers: {
@@ -134,7 +134,12 @@ class BondExternalAccounts {
       }));
   }
 
-  _updateLinkToken({ accountId, linkedAccountId, identity, authorization }) {
+  _updateLinkToken({
+                     accountId,
+                     linkedAccountId,
+                     identity,
+                     authorization
+  }: { linkedAccountId: string, accountId: string, identity: string, authorization: string  }) {
     return new Promise((resolve, reject) => {
       try {
         return fetch(`${this.bondHost}/api/v0/accounts/${accountId}/external_accounts/plaid`, {
@@ -164,7 +169,12 @@ class BondExternalAccounts {
    * @param {String} identity Set identity token.
    * @param {String} authorization Set authorization token.
    */
-  microDeposit({ accountId, linkedAccountId, identity, authorization }) {
+  microDeposit({
+                 accountId,
+                 linkedAccountId,
+                 identity,
+                 authorization
+  }: { linkedAccountId: string, accountId: string, identity: string, authorization: string  }) {
     return this._updateLinkToken({ accountId, linkedAccountId, identity, authorization })
       .then(data => this._initializePlaidLink(accountId, identity, authorization, data, { update: true, linkedAccountId }));
   }

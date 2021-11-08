@@ -1,16 +1,16 @@
 import BondExternalAccounts from './bond-sdk-external-accounts';
 
-const bondExternalAccounts = new BondExternalAccounts({ bondEnv: 'sandbox.staging', plaidEnv: 'sandbox' });
+const bondExternalAccounts = new BondExternalAccounts({ bondEnv: 'sandbox.staging' });
 
 const btn = document.getElementById('btn');
 
 btn.addEventListener('click', handleClick);
 
 function handleClick() {
-  const accountId = document.getElementById('accountId').value;
-  const linkedAccountId = document.getElementById('linkedAccountId').value;
-  const identity = document.getElementById('identity').value;
-  const authorization = document.getElementById('authorization').value;
+  const accountId = (<HTMLInputElement>document.getElementById('accountId')).value;
+  const linkedAccountId = (<HTMLInputElement>document.getElementById('linkedAccountId')).value;
+  const identity = (<HTMLInputElement>document.getElementById('identity')).value;
+  const authorization = (<HTMLInputElement>document.getElementById('authorization')).value;
 
   bondExternalAccounts.microDeposit({
     accountId,

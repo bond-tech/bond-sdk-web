@@ -12,7 +12,7 @@ module.exports = {
     ],
     "bond-sdk-external-accounts": path.resolve(__dirname, './src/bond-sdk-external-accounts.ts'),
     'link-account': path.resolve(__dirname, './src/link-account.js'),
-    'micro-deposit': path.resolve(__dirname, './src/micro-deposit.js'),
+    'micro-deposit': path.resolve(__dirname, './src/micro-deposit.ts'),
     index: path.resolve(__dirname, "./src/sample-card-show.ts"),
     multiple: path.resolve(__dirname, "./src/sample-card-show-multiple.ts"),
     pin: path.resolve(__dirname, "./src/sample-pin-setting.ts"),

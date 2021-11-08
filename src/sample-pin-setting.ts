@@ -1,5 +1,5 @@
 import BondCards from "./bond-sdk-cards";
-import("./sample.css");
+import "./sample.css";
 
 const bondCards = new BondCards({ live: true });
 bondCards
@@ -51,14 +51,14 @@ bondCards
     console.error("error", error);
   });
 
-window.onSubmit = () => {
+(<any>window).onSubmit = () => {
   bondCards.submit({
-    cardId: document.getElementById("card-id").value,
-    identity: document.getElementById("identity").value,
-    authorization: document.getElementById("authorization").value,
-    currentPin: document.getElementById("cc-current-pin").value,
-    newPin: document.getElementById("cc-new-pin").value,
-    confirmPin: document.getElementById("cc-confirm-pin").value,
+    cardId: (<HTMLInputElement>document.getElementById("card-id")).value,
+    identity: (<HTMLInputElement>document.getElementById("identity")).value,
+    authorization: (<HTMLInputElement>document.getElementById("authorization")).value,
+    currentPin: (<HTMLInputElement>document.getElementById("cc-current-pin")).value,
+    newPin: (<HTMLInputElement>document.getElementById("cc-new-pin")).value,
+    confirmPin: (<HTMLInputElement>document.getElementById("cc-confirm-pin")).value,
     successCallback: function (status, data) {
       console.log(status, data);
       document.getElementById(
@@ -67,7 +67,7 @@ window.onSubmit = () => {
       pin_changed @ service: ${data.pin_changed}<br/>`;
     },
     errorCallback: function (errors) {
-      document.getElementById("result").innerHTML = errors;
+      document.getElementById("result").innerHTML = errors.toString();
     },
   });
 };

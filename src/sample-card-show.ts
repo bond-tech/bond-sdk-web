@@ -31,11 +31,11 @@ const reveal = () => {
   // use temporary key token to reveal appropriate field values
 
   loadingHelper('num', 'pending')
-  bondCards
+    bondCards
     .show({
-      cardId: document.getElementById("card-id").value,
-      identity: document.getElementById("identity").value,
-      authorization: document.getElementById("authorization").value,
+      cardId: (<HTMLInputElement>document.getElementById("card-id")).value,
+      identity: (<HTMLInputElement>document.getElementById("identity")).value,
+      authorization: (<HTMLInputElement>document.getElementById("authorization")).value,
       field: "number",
       htmlSelector: "#num",
       format: {
@@ -55,9 +55,9 @@ const reveal = () => {
   loadingHelper('exp', 'pending')
   bondCards
     .show({
-      cardId: document.getElementById("card-id").value,
-      identity: document.getElementById("identity").value,
-      authorization: document.getElementById("authorization").value,
+      cardId: (<HTMLInputElement>document.getElementById("card-id")).value,
+      identity: (<HTMLInputElement>document.getElementById("identity")).value,
+      authorization: (<HTMLInputElement>document.getElementById("authorization")).value,
       field: "expiry",
       htmlSelector: "#exp",
       format: {
@@ -77,9 +77,9 @@ const reveal = () => {
   loadingHelper('cvv', 'pending')
   bondCards
     .show({
-      cardId: document.getElementById("card-id").value,
-      identity: document.getElementById("identity").value,
-      authorization: document.getElementById("authorization").value,
+      cardId: (<HTMLInputElement>document.getElementById("card-id")).value,
+      identity: (<HTMLInputElement>document.getElementById("identity")).value,
+      authorization: (<HTMLInputElement>document.getElementById("authorization")).value,
       field: "cvv",
       htmlSelector: "#cvv",
       css,
@@ -100,7 +100,7 @@ const redact = () => {
   document.getElementById("toggle").textContent = "Reveal";
 };
 
-window.toggle = () => {
+(<any>window).toggle = () => {
   if (hidden) {
     reveal();
   } else {

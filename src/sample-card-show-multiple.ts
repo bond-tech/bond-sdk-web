@@ -1,5 +1,5 @@
 import BondCards from "./bond-sdk-cards";
-import("./sample.css");
+import "./sample.css";
 
 const bondCards = new BondCards({ live: true });
 
@@ -37,9 +37,9 @@ const reveal = () => {
   loadingHelper('pending');
   bondCards
     .showMultiple({
-      cardId: document.getElementById("card-id").value,
-      identity: document.getElementById("identity").value,
-      authorization: document.getElementById("authorization").value,
+      cardId: (<HTMLInputElement>document.getElementById("card-id")).value,
+      identity: (<HTMLInputElement>document.getElementById("identity")).value,
+      authorization: (<HTMLInputElement>document.getElementById("authorization")).value,
       fields: {
         number: {
           htmlSelector: "#num",
@@ -79,7 +79,7 @@ const redact = () => {
   document.getElementById("toggle").textContent = "Reveal";
 };
 
-window.toggle = () => {
+(<any>window).toggle = () => {
   if (hidden) {
     reveal();
   } else {

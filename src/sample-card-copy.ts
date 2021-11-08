@@ -1,6 +1,5 @@
 import BondCards from "./bond-sdk-cards";
-
-import("./sample.css");
+import "./sample.css";
 
 const bondCards = new BondCards({live: true});
 
@@ -41,9 +40,9 @@ const reveal = () => {
 
     bondCards
         .show({
-            cardId: document.getElementById("card-id").value,
-            identity: document.getElementById("identity").value,
-            authorization: document.getElementById("authorization").value,
+            cardId: (<HTMLInputElement>document.getElementById("card-id")).value,
+            identity: (<HTMLInputElement>document.getElementById("identity")).value,
+            authorization: (<HTMLInputElement>document.getElementById("authorization")).value,
             field: "number",
             htmlSelector: "#num",
             format: {
@@ -55,7 +54,7 @@ const reveal = () => {
         .then(data => {
             loadingHelper('num', 'success')
             bondCards.copy({
-                iframe: data,
+                iframe: data as any,
                 htmlSelector: '#num-copy-btn',
                 callback: (status) => {
                     if (status === 'success') {

@@ -251,7 +251,7 @@ class BondCards {
     fields: Record<string, {
       htmlSelector: string,
       htmlWrapper?: string,
-      format: Format,
+      format?: Format,
       css?: {}
     }>;
   }) {
@@ -460,13 +460,13 @@ class BondCards {
     placeholder: string;
     successColor: string;
     errorColor: string;
-    color: string;
-    lineHeight: string;
-    fontSize: string;
-    fontFamily: string;
-    disabled: boolean;
-    readOnly: boolean;
-    autoFocus: boolean;
+    color?: string;
+    lineHeight?: string;
+    fontSize?: string;
+    fontFamily?: string;
+    disabled?: boolean;
+    readOnly?: boolean;
+    autoFocus?: boolean;
     hideValue?: boolean;
   }) {
     const validations: Array<ValidationType> = type === 'new_pin' ? ['required'] : [];
@@ -582,7 +582,8 @@ class BondCards {
     authorization: string;
     currentPin?: string;
     newPin: string;
-    successCallback: (status: number, data: object) => void;
+    confirmPin?: string;
+    successCallback: (status: number, data: { card_id: string; pin_changed: boolean }) => void;
     errorCallback: (errors: Record<string, object>) => void;
   }) {
     const options = {

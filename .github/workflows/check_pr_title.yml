@@ -1,0 +1,16 @@
+name: Validate PR Title
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  check-pr-title:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: bond-tech/action-pr-title@master
+        with:
+          regex: '^(fix|feat|docs|style|refactor|perf|test|chore)(\([A-Z]{2,}-\d+\))\:(\s+\S+){2,}' # Regex the title should match.
+          prefix_case_sensitive: false # title prefix are case insensitive
+          min_length: 5 # Min length of the title
+          github_token: ${{ github.token }} # Default: ${{ github.token }}

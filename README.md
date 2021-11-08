@@ -22,10 +22,10 @@ responsible for dependency management.
 ### NPM
 
 To install the module in your repo use your terminal to type:
-`npm install bond-sdk-cards`
+`npm install bond-sdk-web`
 
 Then import it in your Javascript code:
-`import BondCards from 'bond-sdk-cards';`
+`import BondCards from 'bond-sdk-web';`
 
 ### CDN
 
@@ -33,11 +33,11 @@ Or you can install the SDK from a CDN.
 
 #### Using JS
 
-`import BondCards from 'cdn.bond.tech/sdk/cards/v1/bond-sdk-cards.js';`
+`import BondCards from 'cdn.bond.tech/sdk/cards/v1/bond-sdk-web.js';`
 
 #### Using HTML
 
-<script type="text/javascript" src="cdn.bond.tech/sdk/cards/v1/bond-sdk-cards.js"></script>
+<script type="text/javascript" src="cdn.bond.tech/sdk/cards/v1/bond-sdk-web.js"></script>
 
 ## Usage
 
@@ -46,7 +46,7 @@ requests made to the API. The SDK provides a `BondCards` object containing
 several methods which map to the calls and parameters described in [BondCards's API documentation](https://docs.bond.tech/docs/retrieve-card-details-set-pins-and-reset-pins).
 
 The following snippet is a generic example of how brands can use the SDK. If you need
-details for a specific module, refer to the [sample files](https://github.com/bond-tech/bond-sdk-cards).
+details for a specific module, refer to the [sample files](https://github.com/bond-tech/bond-sdk-web).
 
 Before executing any request, you need to authorize the calls to the Bond API:
 
@@ -229,7 +229,7 @@ bondCards
 
 ## Available methods
 
-See [API Documentation](https://github.com/bond-tech/bond-sdk-cards/docs/gen/BondCards.html)
+See [API Documentation](https://github.com/bond-tech/bond-sdk-web/docs/gen/BondCards.html)
 
 ### Working with the Repo
 
@@ -248,4 +248,4 @@ To handle all implementation use cases, Engineers should always build this
 project (`npm run build`) before committing.
 
 Include the /dist folder in your commit for customers that link to the built
-bond-sdk-cards.js file directly.
+bond-sdk-web.js file directly.

@@ -95,7 +95,7 @@ module.exports = {
       template: path.resolve(__dirname, './src/link-account.html'),
       inject: true,
       chunks: ['bond-sdk-account-connection', 'link-account'],
-      filename: 'index.html', // output file
+      filename: 'link-account.html', // output file
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './src/micro-deposit.html'),

@@ -70,7 +70,7 @@ function getLinkedAccountId(cy, cb) {
 
   Cypress.env('linkedAccountId', '')
 
-  cy.visitPage();
+  cy.visitPage('link-account');
 
   cy.fillAndSubmit();
 

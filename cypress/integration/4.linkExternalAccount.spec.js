@@ -2,7 +2,7 @@
 
 context('Actions', () => {
   beforeEach(() => {
-    cy.visitPage()
+    cy.visitPage('link-account')
 
     cy.intercept({
       method: 'POST',

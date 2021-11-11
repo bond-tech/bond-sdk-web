@@ -52,7 +52,7 @@ header {
 .menu li:hover a {
   background: #000000;
 }
-iframe {
+.field iframe {
   max-height: 25px;
 }
 .panel {

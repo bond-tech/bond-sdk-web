@@ -9,7 +9,7 @@ module.exports = {
       path.resolve(__dirname, "./src/collect.js"),
       path.resolve(__dirname, "./src/bond-sdk-cards.ts"),
     ],
-    // "bond-sdk-cards": path.resolve(__dirname, "./src/bond-sdk-cards.ts"),
+    "bond-sdk-external-accounts": path.resolve(__dirname, './src/bond-sdk-external-accounts.ts'),
     "index": path.resolve(__dirname, "./src/index.ts"),
   },
   output: {

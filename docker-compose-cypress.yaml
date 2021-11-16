@@ -24,6 +24,8 @@ services:
       - COMMIT_INFO_AUTHOR=${COMMIT_INFO_AUTHOR}
       - COMMIT_INFO_SHA=${COMMIT_INFO_SHA}
       - COMMIT_INFO_REMOTE=${COMMIT_INFO_REMOTE}
+      - BOND_ENV=sandbox.staging
+      - SERVER_ENDPOINT=https://sandbox.staging.bond.tech/api/v0/accounts
     build:
       context: .
       dockerfile: cypress.Dockerfile

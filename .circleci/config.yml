@@ -112,12 +112,15 @@ jobs:
             MINOR_VERSION=$( echo ${FULL_VERSION} | cut -d'.' -f2 )
             PATCH_VERSION=$( echo ${FULL_VERSION} | cut -d'.' -f3 )
             aws s3 cp dist/bond-sdk-cards.js s3://bond-prod-web-assets/sdk/web/archive/cards-v${FULL_VERSION}-${CIRCLE_BRANCH}-${CIRCLE_SHA1}.js
-            aws s3 cp dist/index.js s3://bond-prod-web-assets/sdk/cards/archive/index-v${FULL_VERSION}-${CIRCLE_BRANCH}-${CIRCLE_SHA1}.js
+            aws s3 cp dist/bond-sdk-external-accounts.js s3://bond-prod-web-assets/sdk/web/archive/external-v${FULL_VERSION}-${CIRCLE_BRANCH}-${CIRCLE_SHA1}.js
+            aws s3 cp dist/index.js s3://bond-prod-web-assets/sdk/web/archive/index-v${FULL_VERSION}-${CIRCLE_BRANCH}-${CIRCLE_SHA1}.js
             if [[ ${CIRCLE_BRANCH} =~ ^main$ ]] ; then
-              aws s3 cp dist/bond-sdk-cards.js s3://bond-prod-web-assets/sdk/cards/v${MAJOR_VERSION}/bond-sdk-cards.js
-              aws s3 cp dist/index.js s3://bond-prod-web-assets/sdk/cards/v${MAJOR_VERSION}/index.js
-              aws s3 cp dist/bond-sdk-cards.js s3://bond-prod-web-assets/sdk/cards/v/${MAJOR_VERSION}/${MINOR_VERSION}/${PATCH_VERSION}/bond-sdk-cards.js
-              aws s3 cp dist/index.js s3://bond-prod-web-assets/sdk/cards/v/${MAJOR_VERSION}/${MINOR_VERSION}/${PATCH_VERSION}/index.js
+              aws s3 cp dist/bond-sdk-cards.js s3://bond-prod-web-assets/sdk/web/v${MAJOR_VERSION}/bond-sdk-cards.js
+              aws s3 cp dist/bond-sdk-external-accounts.js s3://bond-prod-web-assets/sdk/web/v${MAJOR_VERSION}/bond-sdk-external-accounts.js
+              aws s3 cp dist/index.js s3://bond-prod-web-assets/sdk/web/v${MAJOR_VERSION}/index.js
+              aws s3 cp dist/bond-sdk-cards.js s3://bond-prod-web-assets/sdk/web/v/${MAJOR_VERSION}/${MINOR_VERSION}/${PATCH_VERSION}/bond-sdk-cards.js
+              aws s3 cp dist/bond-sdk-external-accounts.js s3://bond-prod-web-assets/sdk/web/v/${MAJOR_VERSION}/${MINOR_VERSION}/${PATCH_VERSION}/bond-sdk-external-accounts.js
+              aws s3 cp dist/index.js s3://bond-prod-web-assets/sdk/web/v/${MAJOR_VERSION}/${MINOR_VERSION}/${PATCH_VERSION}/index.js
             fi
 
 workflows:

@@ -10,6 +10,9 @@ module.exports = {
       path.resolve(__dirname, "./src/collect.js"),
       path.resolve(__dirname, "./src/bond-sdk-cards.ts"),
     ],
+    "bond-sdk-external-accounts": path.resolve(__dirname, './src/bond-sdk-external-accounts.ts'),
+    'link-account': path.resolve(__dirname, './src/link-account.ts'),
+    'micro-deposit': path.resolve(__dirname, './src/micro-deposit.ts'),
     index: path.resolve(__dirname, "./src/sample-card-show.ts"),
     multiple: path.resolve(__dirname, "./src/sample-card-show-multiple.ts"),
     pin: path.resolve(__dirname, "./src/sample-pin-setting.ts"),
@@ -87,6 +90,18 @@ module.exports = {
       inject: true,
       chunks: ["bond-sdk-web", "copy"],
       filename: "sample_card_copy.html", // output file
+    }),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, './src/link-account.html'),
+      inject: true,
+      chunks: ['bond-sdk-account-connection', 'link-account'],
+      filename: 'link-account.html', // output file
+    }),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, './src/micro-deposit.html'),
+      inject: true,
+      chunks: ['bond-sdk-account-connection', 'micro-deposit'],
+      filename: 'micro-deposit.html', // output file
     }),
   ],
 };

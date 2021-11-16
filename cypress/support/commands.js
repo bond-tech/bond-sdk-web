@@ -119,3 +119,19 @@ Cypress.Commands.add('verifyReavealedInfo', (card_num, card_exp, card_cvv) => {
     cy.wrap($body).find('#result').invoke('text').should('include', card_cvv);
   });
 });
+
+// -- This is a parent command --
+Cypress.Commands.add('fillAndSubmit', () => {
+  cy.get('#identity').clear().type(Cypress.env('identity'));
+
+  cy.get('#authorization').clear().type(Cypress.env('authorization'));
+
+  cy.get('#accountId').clear().type(Cypress.env('accountId'));
+
+  if(Cypress.env('linkedAccountId')) {
+    cy.get('#linkedAccountId').clear().type(Cypress.env('linkedAccountId'));
+  }
+
+  cy.get('#btn').click();
+})
+

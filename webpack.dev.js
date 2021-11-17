@@ -1,6 +1,7 @@
-var webpack = require("webpack");
+const webpack = require("webpack");
 const path = require("path");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
@@ -67,6 +68,11 @@ module.exports = {
     new CleanWebpackPlugin(),
     // Only update what has changed on hot reload
     new webpack.HotModuleReplacementPlugin(),
+    new CopyPlugin({
+      patterns: [
+        path.resolve(__dirname, "src", "sample.css"),
+      ],
+    }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "./src/sample_card_show.html"),
       inject: true,

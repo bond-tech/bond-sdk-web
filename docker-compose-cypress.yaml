@@ -3,7 +3,7 @@ services:
   # Cypress container
   cypress:
     environment:
-      - CLIENT_ENDPOINT=http://bond-sdk-cards-client:8080
+      - CLIENT_ENDPOINT=http://bond-sdk-web-client:8080
       - IDENTITY=${CYPRESS_IDENTITY}
       - AUTHORIZATION=${CYPRESS_AUTHORIZATION}
       - CYPRESS_CREDIT_CARD_ID=${CYPRESS_CREDIT_CARD_ID}
@@ -37,4 +37,4 @@ services:
     container_name: cypress
     restart: unless-stopped
     extra_hosts:
-      - 'bond-sdk-cards-client:${SDK_CONTAINER_IP}'
+      - 'bond-sdk-web-client:${SDK_CONTAINER_IP}'

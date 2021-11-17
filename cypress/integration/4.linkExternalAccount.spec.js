@@ -4,6 +4,8 @@ context('Actions', () => {
   beforeEach(() => {
     cy.visitPage('link-account')
 
+    console.log(Cypress.env('serverEndpoint'));
+
     cy.intercept({
       method: 'POST',
       url: `${Cypress.env('serverEndpoint')}/${Cypress.env('accountId')}/external_accounts/plaid`,

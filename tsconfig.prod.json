@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "declaration": true,
+    "outDir": "./dist"
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "src/sample-card-copy.ts",
+    "src/sample-card-show-multiple.ts",
+    "src/sample-card-show.ts",
+    "src/sample-pin-setting.ts",
+    "src/link-account.ts",
+    "src/micro-deposit.ts"
+  ]
+}

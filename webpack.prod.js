@@ -38,7 +38,13 @@ module.exports = {
         use: ["style-loader", "css-loader"],
       },
 
-      { test: /\.tsx?$/, loader: "ts-loader" }
+      {
+        test: /\.tsx?$/,
+        loader: "ts-loader",
+        options: {
+          configFile: "tsconfig.prod.json",
+        },
+      }
     ],
   },
   mode: "production",

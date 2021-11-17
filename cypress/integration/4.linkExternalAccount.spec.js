@@ -56,6 +56,12 @@ context('Actions', () => {
           .find('#aut-continue-button')
           .click();
 
+        cy.wait(1000);
+
+        cy.wrap($body)
+            .find('#aut-continue-button')
+            .click();
+
         cy.wait('@apiPlaid').then((interception) => {
           const body = interception.response.body;
           cy.log(JSON.stringify(body))
@@ -64,14 +70,14 @@ context('Actions', () => {
           expect(body.verification_status).to.eq('instantly_verified');
         })
 
-        cy.wait(1000);
-
         cy.window().then(win=> {
           const payload = win.sessionStorage.getItem('CONNECT_ACCOUNT_SUCCESS');
 
           cy.log(payload)
 
           const parsed = JSON.parse(payload);
+
+          cy.log(parsed)
 
           expect(parsed).to.have.property('linked_account_id');
         });

@@ -1,7 +1,8 @@
 /// <reference types="cypress" />
 
 context('Actions', () => {
-  it('Do micro deposit successfully', () => {
+  // Plaid team adds recaptcha, so we can not test this logic for now.
+  it.skip('Do micro deposit successfully', () => {
     getLinkedAccountId(cy, (linkedAccountId) => {
       // Before each
 
@@ -186,10 +187,21 @@ function getLinkedAccountId(cy, cb) {
         .first()
         .click();
 
+      cy.wait(5000);
+
+      cy.wrap($body)
+        .find('.Pane.RecaptchaPane iframe[src*=recaptcha]')
+        .its('0.contentDocument.body')
+        .should('not.be.undefined')
+        .and('not.be.empty')
+        .then(cy.wrap)
+        .find('.recaptcha-checkbox-border')
+        .click();
+
       cy.wait(1000);
 
       cy.wrap($body)
-        .find('.ConnectedPane .PaneActions .Button')
+        .find('.Pane.Pane--is-plaid-branded .PaneActions .Button')
         .first()
         .click();
 

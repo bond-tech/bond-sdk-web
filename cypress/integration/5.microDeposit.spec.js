@@ -2,60 +2,60 @@
 
 context('Actions', () => {
   // Plaid team adds recaptcha, so we can not test this logic for now.
-  it.skip('Do micro deposit successfully', () => {
-    getLinkedAccountId(cy, (linkedAccountId) => {
-      // Before each
-
-      Cypress.env('linkedAccountId', linkedAccountId);
-
-      cy.visitPage('micro-deposit');
-
-      // Body
-
-      // custom command in the /cypress/support/commands.js file
-      cy.fillAndSubmit();
-
-      cy.wait(4000);
-
-      cy.get('#plaid-link-iframe-1').then($iframe => {
-        const $body = $iframe.contents().find('body');
-
-        cy.wrap($body)
-          .find('#firstAmount')
-          .type('01');
-
-        cy.wrap($body)
-          .find('.PaneContent .Pane__button').first().find('button').first().click();
-
-        cy.wait(1000);
-
-        cy.wrap($body)
-          .find('#secondAmount')
-          .type('02');
-
-        cy.wrap($body)
-          .find('.PaneContent .Pane__button').first().find('button').first().click();
-
-        cy.wait(1000);
-
-        cy.wrap($body)
-          .find('.PaneActions').first().find('button').first().click();
-
-        cy.wait(2000);
-
-        cy.window().then(win => {
-          const payload = win.sessionStorage.getItem('MICRO_DEPOSIT_SUCCESS');
-
-          cy.log(payload);
-
-          const parsed = JSON.parse(payload)
-
-          expect(parsed).to.have.property('linked_account_id');
-          expect(parsed.linked_account_id).to.eq(linkedAccountId);
-        });
-      });
-    });
-  });
+  // it.skip('Do micro deposit successfully', () => {
+  //   getLinkedAccountId(cy, (linkedAccountId) => {
+  //     // Before each
+  //
+  //     Cypress.env('linkedAccountId', linkedAccountId);
+  //
+  //     cy.visitPage('micro-deposit');
+  //
+  //     // Body
+  //
+  //     // custom command in the /cypress/support/commands.js file
+  //     cy.fillAndSubmit();
+  //
+  //     cy.wait(4000);
+  //
+  //     cy.get('#plaid-link-iframe-1').then($iframe => {
+  //       const $body = $iframe.contents().find('body');
+  //
+  //       cy.wrap($body)
+  //         .find('#firstAmount')
+  //         .type('01');
+  //
+  //       cy.wrap($body)
+  //         .find('.PaneContent .Pane__button').first().find('button').first().click();
+  //
+  //       cy.wait(1000);
+  //
+  //       cy.wrap($body)
+  //         .find('#secondAmount')
+  //         .type('02');
+  //
+  //       cy.wrap($body)
+  //         .find('.PaneContent .Pane__button').first().find('button').first().click();
+  //
+  //       cy.wait(1000);
+  //
+  //       cy.wrap($body)
+  //         .find('.PaneActions').first().find('button').first().click();
+  //
+  //       cy.wait(2000);
+  //
+  //       cy.window().then(win => {
+  //         const payload = win.sessionStorage.getItem('MICRO_DEPOSIT_SUCCESS');
+  //
+  //         cy.log(payload);
+  //
+  //         const parsed = JSON.parse(payload)
+  //
+  //         expect(parsed).to.have.property('linked_account_id');
+  //         expect(parsed.linked_account_id).to.eq(linkedAccountId);
+  //       });
+  //     });
+  //   });
+  // });
 });
 
 function getLinkedAccountId(cy, cb) {

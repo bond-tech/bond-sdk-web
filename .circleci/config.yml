@@ -89,9 +89,9 @@ jobs:
             export COMMIT_INFO_AUTHOR=$CIRCLE_USERNAME
             export COMMIT_INFO_SHA=$CIRCLE_SHA1
             export COMMIT_INFO_REMOTE=$CIRCLE_REPOSITORY_URL
-            export ACCOUNT_ID=c8ae0550-ac12-4269-a8ca-618f796350de
-            export IDENTITY_FOR_EXTERNAL_ACCOUNTS_SDK=bb4a3d1f-d812-457e-ba5e-227cc62a1b15
-            export AUTHORIZATION_FOR_EXTERNAL_ACCOUNTS_SDK=yRAsHYXDRv/pPwMj6i4/cumyWVERRiHPCMa/FQSQoMXfMg5CXsqr/q6s6irLdfSB
+            export ACCOUNT_ID=${CYPRESS_ACCOUNT_ID}
+            export IDENTITY_FOR_EXTERNAL_ACCOUNTS_SDK=${CYPRESS_IDENTITY_FOR_EXTERNAL_ACCOUNTS_SDK}
+            export AUTHORIZATION_FOR_EXTERNAL_ACCOUNTS_SDK=${CYPRESS_AUTHORIZATION_FOR_EXTERNAL_ACCOUNTS_SDK}
             docker-compose -f docker-compose-cypress.yaml config
             docker-compose -f docker-compose-cypress.yaml up --timeout 600 --exit-code-from cypress
           no_output_timeout: 6m

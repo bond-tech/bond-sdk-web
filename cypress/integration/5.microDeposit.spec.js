@@ -2,7 +2,7 @@
 
 context('Actions', () => {
   // Plaid team adds recaptcha, so we can not test this logic for now.
-  it.skip('Do micro deposit successfully', () => {
+  it('Do micro deposit successfully', () => {
     getLinkedAccountId(cy, (linkedAccountId) => {
       // Before each
 

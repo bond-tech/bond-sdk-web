@@ -4,14 +4,17 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
-  entry: [
-    path.resolve(__dirname, "./src/show.js"),
-    path.resolve(__dirname, "./src/collect.js"),
-    path.resolve(__dirname, "./src/index.ts"),
-  ],
+  entry: {
+    "bond-sdk-cards": [
+      path.resolve(__dirname, "./src/show.js"),
+      path.resolve(__dirname, "./src/collect.js"),
+      path.resolve(__dirname, "./src/bond-sdk-cards.ts"),
+    ],
+    "bond-sdk-external-accounts": path.resolve(__dirname, './src/bond-sdk-external-accounts.ts'),
+  },
   output: {
     path: path.resolve(__dirname, "./dist"),
-    filename: "index.js",
+    filename: "[name].js",
     publicPath: "./",
     library: "BondWeb",
     libraryTarget: "umd",
@@ -19,7 +22,7 @@ module.exports = {
   },
 
   resolve: {
-    extensions: ['.ts', '.tsx', '.js']
+    extensions: ['.ts', '.js']
   },
 
   module: {
@@ -50,6 +53,11 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(),
+    new CopyPlugin({
+      patterns: [
+        path.resolve(__dirname, "src", "bond-sdk-web.js"),
+      ],
+    }),
     // Only update what has changed on hot reload
   ],
 };

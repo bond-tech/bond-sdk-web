@@ -1,4 +1,4 @@
-import { BondCards } from './index';
+import { BondCards } from './bond-sdk-web';
 
 const bondCards = new BondCards({live: true});
 

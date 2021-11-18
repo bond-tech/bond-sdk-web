@@ -1,4 +1,4 @@
-import { BondExternalAccounts } from './index';
+import { BondExternalAccounts } from './bond-sdk-web';
 
 const bondExternalAccounts = new BondExternalAccounts({ bondEnv: 'sandbox.staging' });
 

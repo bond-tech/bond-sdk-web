@@ -1,8 +1,8 @@
 type ValidationType = string | {type: string, params: { field: string, function: string }};
 
 type Format = {
-  replaceThis: string,
-  withThis: string,
+  replaceThis?: string,
+  withThis?: string,
   count?: number
 };
 
@@ -189,7 +189,7 @@ class BondCards {
     field,
     htmlWrapper = 'text',
     htmlSelector,
-    format = {} as Format,
+    format = {},
     css = {},
   }: {
     cardId: string;
@@ -336,8 +336,8 @@ class BondCards {
 
       const promises = createPromises(requestsArr);
 
-      return Promise.allSettled(promises).then((response) => {
-        // @ts-ignore
+      // @ts-ignore
+      return Promise.allSettled(promises).then((response: any[]) => {
         const successfulRequests = response.filter(
           (item) => item.status === 'fulfilled'
         );

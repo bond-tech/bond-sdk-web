@@ -6,12 +6,17 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   entry: {
-    "bond-sdk-cards": [
+    "bond-sdk-web": [
       path.resolve(__dirname, "./src/show.js"),
       path.resolve(__dirname, "./src/collect.js"),
-      path.resolve(__dirname, "./src/bond-sdk-cards.ts"),
+      path.resolve(__dirname, "./src/bond-sdk-web.ts"),
     ],
-    "bond-sdk-external-accounts": path.resolve(__dirname, './src/bond-sdk-external-accounts.ts'),
+    // "bond-sdk-cards": [
+    //   path.resolve(__dirname, "./src/show.js"),
+    //   path.resolve(__dirname, "./src/collect.js"),
+    //   path.resolve(__dirname, "./src/bond-sdk-cards.ts"),
+    // ],
+    // "bond-sdk-external-accounts": path.resolve(__dirname, './src/bond-sdk-external-accounts.ts'),
     'link-account': path.resolve(__dirname, './src/link-account.ts'),
     'micro-deposit': path.resolve(__dirname, './src/micro-deposit.ts'),
     index: path.resolve(__dirname, "./src/sample-card-show.ts"),
@@ -71,43 +76,43 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         path.resolve(__dirname, "src", "sample.css"),
-        path.resolve(__dirname, "src", "bond-sdk-web.js"),
+        // path.resolve(__dirname, "src", "bond-sdk-web.ts"),
       ],
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "./src/sample_card_show.html"),
       inject: true,
-      chunks: ["bond-sdk-cards", "index"],
+      chunks: ["bond-sdk-web", "index"],
       filename: "index.html", // output file
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "./src/sample_card_show_multiple.html"),
       inject: true,
-      chunks: ["bond-sdk-cards", "multiple"],
+      chunks: ["bond-sdk-web", "multiple"],
       filename: "sample_card_show_multiple.html", // output file
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "./src/sample_pin_setting.html"),
       inject: true,
-      chunks: ["bond-sdk-cards", "pin"],
+      chunks: ["bond-sdk-web", "pin"],
       filename: "sample_pin_setting.html", // output file
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "./src/sample_card_copy.html"),
       inject: true,
-      chunks: ["bond-sdk-cards", "copy"],
+      chunks: ["bond-sdk-web", "copy"],
       filename: "sample_card_copy.html", // output file
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './src/link-account.html'),
       inject: true,
-      chunks: ['bond-sdk-external-accounts', 'link-account'],
+      chunks: ['bond-sdk-web', 'link-account'],
       filename: 'link-account.html', // output file
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './src/micro-deposit.html'),
       inject: true,
-      chunks: ['bond-sdk-external-accounts', 'micro-deposit'],
+      chunks: ['bond-sdk-web', 'micro-deposit'],
       filename: 'micro-deposit.html', // output file
     }),
   ],

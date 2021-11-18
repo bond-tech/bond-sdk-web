@@ -4,11 +4,13 @@ services:
     environment:
       - BOND_ENV=sandbox.staging
       - SERVER_ENDPOINT=https://sandbox.staging.bond.tech/api/v0/accounts
-      - ACCOUNT_ID=48bfae32-c1f6-42cc-ab42-fe6e50904d11
       - CYPRESS_BASE_URL=http://localhost:8080
       - CLIENT_ENDPOINT=http://localhost:8080
       - IDENTITY=${CYPRESS_IDENTITY}
       - AUTHORIZATION=${CYPRESS_AUTHORIZATION}
+      - ACCOUNT_ID=${CYPRESS_ACCOUNT_ID}
+      - IDENTITY_FOR_EXTERNAL_ACCOUNTS_SDK=${CYPRESS_IDENTITY_FOR_EXTERNAL_ACCOUNTS_SDK}
+      - AUTHORIZATION_FOR_EXTERNAL_ACCOUNTS_SDK=${CYPRESS_AUTHORIZATION_FOR_EXTERNAL_ACCOUNTS_SDK}
 
     build:
       context: .
@@ -18,7 +20,7 @@ services:
         ARTIFACTORY_API_KEY: ${ARTIFACTORY_API_KEY}
         ARTIFACTORY_PYPI_REPOSITORY: ${ARTIFACTORY_PYPI_REPOSITORY}
         ARTIFACTORY_URL: ${ARTIFACTORY_URL}
-    container_name: bond-sdk-cards-client
+    container_name: bond-sdk-web-client
     restart: unless-stopped
     ports:
       - 8080:8080

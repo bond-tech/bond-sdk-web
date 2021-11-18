@@ -1,28 +1,27 @@
-var webpack = require("webpack");
+const webpack = require("webpack");
 const path = require("path");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
   entry: {
-    "bond-sdk-cards": [
+    "bond-sdk-web": [
       path.resolve(__dirname, "./src/show.js"),
       path.resolve(__dirname, "./src/collect.js"),
-      path.resolve(__dirname, "./src/bond-sdk-cards.ts"),
+      path.resolve(__dirname, "./src/bond-sdk-web.ts"),
     ],
-    "bond-sdk-external-accounts": path.resolve(__dirname, './src/bond-sdk-external-accounts.ts'),
-    "index": path.resolve(__dirname, "./src/index.ts"),
   },
   output: {
     path: path.resolve(__dirname, "./dist"),
     filename: "[name].js",
     publicPath: "./",
-    library: "BondCards",
+    library: "BondWeb",
     libraryTarget: "umd",
     globalObject: "this",
   },
 
   resolve: {
-    extensions: ['.ts', '.tsx', '.js']
+    extensions: ['.ts', '.js']
   },
 
   module: {
@@ -37,11 +36,20 @@ module.exports = {
         test: /\.css$/,
         use: ["style-loader", "css-loader"],
       },
-
-      { test: /\.tsx?$/, loader: "ts-loader" }
+      {
+        test: /\.tsx?$/,
+        loader: "ts-loader",
+        options: {
+          configFile: "tsconfig.prod.json",
+        },
+      }
     ],
   },
   mode: "production",
+  optimization: {
+    minimize: true,
+    minimizer: [new TerserPlugin()],
+  },
   plugins: [
     new CleanWebpackPlugin(),
     // Only update what has changed on hot reload

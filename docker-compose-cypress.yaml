@@ -3,7 +3,8 @@ services:
   # Cypress container
   cypress:
     environment:
-      - CLIENT_ENDPOINT=http://bond-sdk-cards-client:8080
+      - CYPRESS_BASE_URL=http://bond-sdk-web-client:8080
+      - CLIENT_ENDPOINT=http://bond-sdk-web-client:8080
       - IDENTITY=${CYPRESS_IDENTITY}
       - AUTHORIZATION=${CYPRESS_AUTHORIZATION}
       - CYPRESS_CREDIT_CARD_ID=${CYPRESS_CREDIT_CARD_ID}
@@ -26,6 +27,9 @@ services:
       - COMMIT_INFO_REMOTE=${COMMIT_INFO_REMOTE}
       - BOND_ENV=sandbox.staging
       - SERVER_ENDPOINT=https://sandbox.staging.bond.tech/api/v0/accounts
+      - ACCOUNT_ID=${CYPRESS_ACCOUNT_ID}
+      - IDENTITY_FOR_EXTERNAL_ACCOUNTS_SDK=${CYPRESS_IDENTITY_FOR_EXTERNAL_ACCOUNTS_SDK}
+      - AUTHORIZATION_FOR_EXTERNAL_ACCOUNTS_SDK=${CYPRESS_AUTHORIZATION_FOR_EXTERNAL_ACCOUNTS_SDK}
     build:
       context: .
       dockerfile: cypress.Dockerfile
@@ -37,4 +41,4 @@ services:
     container_name: cypress
     restart: unless-stopped
     extra_hosts:
-      - 'bond-sdk-cards-client:${SDK_CONTAINER_IP}'
+      - 'bond-sdk-web-client:${SDK_CONTAINER_IP}'

@@ -22,7 +22,7 @@ describe('Sample Card Show Form Multiple', () => {
     // find card id, and temporary token inputs
     // and fill the form out
     cy.fillBrandBackendSectionOut(Cypress.env('CREDIT_CARD_ID'));
-  
+
   });
 
   it.skip('reveal card information in sample card show multiple (Credit)', () => {
@@ -46,7 +46,7 @@ describe('Sample Card Show Form Multiple', () => {
     cy.verifyReavealedInfo( Cypress.env('CREDIT_CARD_NUMBER'),
                             Cypress.env('CREDIT_CARD_EXP'),
                             Cypress.env('CREDIT_CARD_CVV'));
-    
+
   });
 
   it('fill the form out in sample card show multiple (Debit)', () => {
@@ -54,7 +54,7 @@ describe('Sample Card Show Form Multiple', () => {
     // find card id, and temporary token inputs
     // and fill the form out - debit card id
     cy.fillBrandBackendSectionOut(Cypress.env('DEBIT_CARD_ID'));
-    
+
   });
 
   it('reveal card information in sample card show multiple (Debit)', () => {
@@ -66,7 +66,7 @@ describe('Sample Card Show Form Multiple', () => {
 
     // fill out the form (debit card id, temporary token) in brand backend section
     cy.fillBrandBackendSectionOut(Cypress.env('DEBIT_CARD_ID'));
-  
+
     cy.intercept("GET",`/api/v0/cards/${Cypress.env('DEBIT_CARD_ID')}`)
       .as("debit_card_show_multiple");
 
@@ -79,6 +79,6 @@ describe('Sample Card Show Form Multiple', () => {
                             Cypress.env('DEBIT_CARD_EXP'),
                             Cypress.env('DEBIT_CARD_CVV'));
 
-  });  
+  });
 
 });

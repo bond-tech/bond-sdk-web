@@ -122,9 +122,9 @@ Cypress.Commands.add('verifyReavealedInfo', (card_num, card_exp, card_cvv) => {
 
 // -- This is a parent command --
 Cypress.Commands.add('fillAndSubmit', () => {
-  cy.get('#identity').clear().type(Cypress.env('identity'));
+  cy.get('#identity').clear().type(Cypress.env('identityForExternalAccountsSDK'));
 
-  cy.get('#authorization').clear().type(Cypress.env('authorization'));
+  cy.get('#authorization').clear().type(Cypress.env('authorizationForExternalAccountsSDK'));
 
   cy.get('#accountId').clear().type(Cypress.env('accountId'));
 

@@ -1,16 +1,16 @@
-var webpack = require("webpack");
+const webpack = require("webpack");
 const path = require("path");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   entry: {
-    "bond-sdk-cards": [
+    "bond-sdk-web": [
       path.resolve(__dirname, "./src/show.js"),
       path.resolve(__dirname, "./src/collect.js"),
-      path.resolve(__dirname, "./src/bond-sdk-cards.ts"),
+      path.resolve(__dirname, "./src/bond-sdk-web.ts"),
     ],
-    "bond-sdk-external-accounts": path.resolve(__dirname, './src/bond-sdk-external-accounts.ts'),
     'link-account': path.resolve(__dirname, './src/link-account.ts'),
     'micro-deposit': path.resolve(__dirname, './src/micro-deposit.ts'),
     index: path.resolve(__dirname, "./src/sample-card-show.ts"),
@@ -28,7 +28,7 @@ module.exports = {
   },
 
   resolve: {
-    extensions: ['.ts', '.tsx', '.js']
+    extensions: ['.ts', '.js']
   },
 
   // Enable sourcemaps for debugging webpack's output.
@@ -67,6 +67,11 @@ module.exports = {
     new CleanWebpackPlugin(),
     // Only update what has changed on hot reload
     new webpack.HotModuleReplacementPlugin(),
+    new CopyPlugin({
+      patterns: [
+        path.resolve(__dirname, "src", "sample.css"),
+      ],
+    }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "./src/sample_card_show.html"),
       inject: true,
@@ -94,13 +99,13 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './src/link-account.html'),
       inject: true,
-      chunks: ['bond-sdk-account-connection', 'link-account'],
+      chunks: ['bond-sdk-web', 'link-account'],
       filename: 'link-account.html', // output file
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './src/micro-deposit.html'),
       inject: true,
-      chunks: ['bond-sdk-account-connection', 'micro-deposit'],
+      chunks: ['bond-sdk-web', 'micro-deposit'],
       filename: 'micro-deposit.html', // output file
     }),
   ],

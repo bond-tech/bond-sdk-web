@@ -52,6 +52,12 @@ context('Actions', () => {
 
         cy.wait(1000);
 
+        // submit checkbox
+        cy.wrap($body)
+          .find('#aut-continue-button')
+          .click();
+
+        // submit form
         cy.wrap($body)
           .find('#aut-continue-button')
           .click();

@@ -5,12 +5,11 @@ const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
   entry: {
-    "bond-sdk-cards": [
+    'bond-sdk-web': [
       path.resolve(__dirname, "./src/show.js"),
       path.resolve(__dirname, "./src/collect.js"),
-      path.resolve(__dirname, "./src/bond-sdk-cards.ts"),
-    ],
-    "bond-sdk-external-accounts": path.resolve(__dirname, "./src/bond-sdk-external-accounts.ts"),
+      path.resolve(__dirname, "./src/bond-sdk-web.ts"),
+    ]
   },
   output: {
     path: path.resolve(__dirname, "./dist"),

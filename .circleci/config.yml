@@ -93,7 +93,7 @@ jobs:
             export IDENTITY_FOR_EXTERNAL_ACCOUNTS_SDK=${CYPRESS_IDENTITY_FOR_EXTERNAL_ACCOUNTS_SDK}
             export AUTHORIZATION_FOR_EXTERNAL_ACCOUNTS_SDK=${CYPRESS_AUTHORIZATION_FOR_EXTERNAL_ACCOUNTS_SDK}
             docker-compose -f docker-compose-cypress.yaml config
-            docker-compose -f docker-compose-cypress.yaml up --timeout 600 --exit-code-from cypress
+            docker-compose -f docker-compose-cypress.yaml up --timeout 30000 --exit-code-from cypress
           no_output_timeout: 6m
 
   push_to_cdn:

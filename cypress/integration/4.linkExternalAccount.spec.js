@@ -47,6 +47,8 @@ context('Actions', () => {
         cy.wrap($body)
           .find('.ThreadsCredentialPane__form').first().find('button').first().click();
 
+        cy.wait(2000);
+
         cy.wrap($body)
           .find('.PaneContent .ListItem input').first().click();
 

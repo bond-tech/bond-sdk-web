@@ -93,7 +93,7 @@ jobs:
             export IDENTITY_FOR_EXTERNAL_ACCOUNTS_SDK=${CYPRESS_IDENTITY_FOR_EXTERNAL_ACCOUNTS_SDK}
             export AUTHORIZATION_FOR_EXTERNAL_ACCOUNTS_SDK=${CYPRESS_AUTHORIZATION_FOR_EXTERNAL_ACCOUNTS_SDK}
             docker-compose -f docker-compose-cypress.yaml config
-            docker-compose -f docker-compose-cypress.yaml up --timeout 600 --exit-code-from cypress
+            docker-compose -f docker-compose-cypress.yaml up --timeout 30000 --exit-code-from cypress
           no_output_timeout: 6m
 
   push_to_cdn:
@@ -114,10 +114,22 @@ jobs:
             MAJOR_VERSION=$( echo ${FULL_VERSION} | cut -d'.' -f1 )
             MINOR_VERSION=$( echo ${FULL_VERSION} | cut -d'.' -f2 )
             PATCH_VERSION=$( echo ${FULL_VERSION} | cut -d'.' -f3 )
-            aws s3 cp dist/bond-sdk-web.js s3://bond-prod-web-assets/sdk/web/archive/v${FULL_VERSION}-${CIRCLE_BRANCH}-${CIRCLE_SHA1}-bond-sdk-web.js
+            aws s3 cp dist/bond-sdk-cards.d.ts s3://bond-prod-web-assets/sdk/web/archive/v${FULL_VERSION}-${CIRCLE_BRANCH}-${CIRCLE_SHA1}-bond-sdk-cards.d.ts
+            aws s3 cp dist/bond-sdk-cards.js s3://bond-prod-web-assets/sdk/web/archive/v${FULL_VERSION}-${CIRCLE_BRANCH}-${CIRCLE_SHA1}-bond-sdk-cards.js
+            aws s3 cp dist/bond-sdk-external-accounts.d.ts s3://bond-prod-web-assets/sdk/web/archive/v${FULL_VERSION}-${CIRCLE_BRANCH}-${CIRCLE_SHA1}-bond-sdk-external-accounts.d.ts
+            aws s3 cp dist/bond-sdk-external-accounts.js s3://bond-prod-web-assets/sdk/web/archive/v${FULL_VERSION}-${CIRCLE_BRANCH}-${CIRCLE_SHA1}-bond-sdk-external-accounts.js
+            aws s3 cp dist/bond-sdk-web.d.ts s3://bond-prod-web-assets/sdk/web/archive/v${FULL_VERSION}-${CIRCLE_BRANCH}-${CIRCLE_SHA1}-bond-sdk-web.d.ts
             if [[ ${CIRCLE_BRANCH} =~ ^main$ ]] ; then
-              aws s3 cp dist/bond-sdk-web.js s3://bond-prod-web-assets/sdk/web/v${MAJOR_VERSION}/bond-sdk-web.js
-              aws s3 cp dist/bond-sdk-web.js s3://bond-prod-web-assets/sdk/wev/v/${MAJOR_VERSION}/${MINOR_VERSION}/${PATCH_VERSION}/bond-sdk-web.js
+              aws s3 cp dist/bond-sdk-cards.d.ts s3://bond-prod-web-assets/sdk/web/v${MAJOR_VERSION}-bond-sdk-cards.d.ts.js
+              aws s3 cp dist/bond-sdk-cards.d.ts s3://bond-prod-web-assets/sdk/wev/v/${MAJOR_VERSION}/${MINOR_VERSION}/${PATCH_VERSION}/bond-sdk-cards.d.ts
+              aws s3 cp dist/bond-sdk-cards.js s3://bond-prod-web-assets/sdk/web/v${MAJOR_VERSION}-bond-sdk-cards.js.js
+              aws s3 cp dist/bond-sdk-cards.js s3://bond-prod-web-assets/sdk/wev/v/${MAJOR_VERSION}/${MINOR_VERSION}/${PATCH_VERSION}/bond-sdk-cards.js
+              aws s3 cp dist/bond-sdk-external-accounts.d.ts s3://bond-prod-web-assets/sdk/web/v${MAJOR_VERSION}-bond-sdk-external-accounts.d.ts.js
+              aws s3 cp dist/bond-sdk-external-accounts.d.ts s3://bond-prod-web-assets/sdk/wev/v/${MAJOR_VERSION}/${MINOR_VERSION}/${PATCH_VERSION}/bond-sdk-external-accounts.d.ts
+              aws s3 cp dist/bond-sdk-external-accounts.js s3://bond-prod-web-assets/sdk/web/v${MAJOR_VERSION}-bond-sdk-external-accounts.js.js
+              aws s3 cp dist/bond-sdk-external-accounts.js s3://bond-prod-web-assets/sdk/wev/v/${MAJOR_VERSION}/${MINOR_VERSION}/${PATCH_VERSION}/bond-sdk-external-accounts.js
+              aws s3 cp dist/bond-sdk-web.d.ts s3://bond-prod-web-assets/sdk/web/v${MAJOR_VERSION}.js
+              aws s3 cp dist/bond-sdk-web.d.ts s3://bond-prod-web-assets/sdk/wev/v/${MAJOR_VERSION}/${MINOR_VERSION}/${PATCH_VERSION}/bond-sdk-web.d.ts
             fi
 
 workflows:

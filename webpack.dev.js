@@ -6,11 +6,12 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   entry: {
-    "bond-sdk-web": [
+    "bond-sdk-cards": [
       path.resolve(__dirname, "./src/show.js"),
       path.resolve(__dirname, "./src/collect.js"),
-      path.resolve(__dirname, "./src/bond-sdk-web.ts"),
+      path.resolve(__dirname, "./src/bond-sdk-cards.ts"),
     ],
+    "bond-sdk-external-accounts": path.resolve(__dirname, "./src/bond-sdk-external-accounts.ts"),
     'link-account': path.resolve(__dirname, './src/link-account.ts'),
     'micro-deposit': path.resolve(__dirname, './src/micro-deposit.ts'),
     index: path.resolve(__dirname, "./src/sample-card-show.ts"),
@@ -75,19 +76,19 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "./src/sample_card_show.html"),
       inject: true,
-      chunks: ["bond-sdk-web", "index"],
+      chunks: ["bond-sdk-cards", "index"],
       filename: "index.html", // output file
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "./src/sample_card_show_multiple.html"),
       inject: true,
-      chunks: ["bond-sdk-web", "multiple"],
+      chunks: ["bond-sdk-cards", "multiple"],
       filename: "sample_card_show_multiple.html", // output file
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "./src/sample_pin_setting.html"),
       inject: true,
-      chunks: ["bond-sdk-web", "pin"],
+      chunks: ["bond-sdk-cards", "pin"],
       filename: "sample_pin_setting.html", // output file
     }),
     new HtmlWebpackPlugin({
@@ -99,13 +100,13 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './src/link-account.html'),
       inject: true,
-      chunks: ['bond-sdk-web', 'link-account'],
+      chunks: ['bond-sdk-external-accounts', 'link-account'],
       filename: 'link-account.html', // output file
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './src/micro-deposit.html'),
       inject: true,
-      chunks: ['bond-sdk-web', 'micro-deposit'],
+      chunks: ['bond-sdk-external-accounts', 'micro-deposit'],
       filename: 'micro-deposit.html', // output file
     }),
   ],

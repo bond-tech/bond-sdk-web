@@ -1,0 +1,36 @@
+/.circleci
+/.github
+/cypress
+/src
+.eslintrc.json
+.gitignore
+cypress.Dockerfile
+cypress.json
+docker-compose-cypress.yaml
+docker-compose-test.yaml
+Dockerfile
+entrypoint.sh
+gulpfile.js
+serveStatic.js
+tsconfig.json
+tsconfig.prod.json
+webpack.dev.js
+webpack.prod.js
+
+# build output
+build
+
+# dependencies
+node_modules
+yarn.lock
+package-lock.json
+out
+.eslintcache
+
+# other
+.idea/
+.DS_Store
+.env
+env/
+
+.vscode/settings.json

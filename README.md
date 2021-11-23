@@ -237,13 +237,7 @@ bondCards
 
 ### Initialize BondExternalAccounts
 
-1. Import scripts
-
-```html
-  <script src="https://cdn.bond.tech/sdk/web/v1/bond-sdk-external-accounts.js"></script>
-```
-
-2. Call the constructor ( "{ bondEnv: 'sandbox' }" to access the Sandbox environment )
+Call the constructor ( "{ bondEnv: 'sandbox' }" to access the Sandbox environment )
 ```js
 const bondExternalAccounts = new BondExternalAccounts({ bondEnv: 'sandbox'});
 ```

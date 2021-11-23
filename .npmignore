@@ -16,6 +16,7 @@ tsconfig.json
 tsconfig.prod.json
 webpack.dev.js
 webpack.prod.js
+.env-example
 
 # build output
 build

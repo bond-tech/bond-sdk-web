@@ -7,11 +7,13 @@ const btn = document.getElementById('btn');
 btn.addEventListener('click', handleClick);
 
 function handleClick() {
+  const customerId = (<HTMLInputElement>document.getElementById('customerId')).value;
   const accountId = (<HTMLInputElement>document.getElementById('accountId')).value;
   const identity = (<HTMLInputElement>document.getElementById('identity')).value;
   const authorization = (<HTMLInputElement>document.getElementById('authorization')).value;
 
   bondExternalAccounts.linkAccount({
+    customerId,
     accountId,
     identity,
     authorization,

@@ -9,7 +9,6 @@ interface LinkAccountParams extends Credentials {
 }
 
 interface MicroDepositParams extends Credentials {
-    customerId: string;
     accountId: string;
     linkedAccountId: string;
 }
@@ -310,26 +309,26 @@ class BondExternalAccounts {
         return await this._linkExternalAccountToCardAccount(card_account_id, account_id, credentials);
     }
 
-    // async _updateLinkToken(account_id: string, linked_account_id: string, { identity, authorization }: Credentials) {
-    //     const res = await fetch(`${this.bondHost}/api/v0/accounts/${account_id}/external_accounts/plaid`, {
-    //         method: 'PATCH',
-    //         headers: {
-    //             'Identity': identity,
-    //             'Authorization': authorization,
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify({
-    //             linked_account_id,
-    //         }),
-    //     });
-    //
-    //     const data = await res.json();
-    //
-    //     console.log('_updateLinkToken')
-    //     console.log(data)
-    //
-    //     return data;
-    // }
+    async _updateLinkToken(account_id: string, linked_account_id: string, { identity, authorization }: Credentials) {
+        const res = await fetch(`${this.bondHost}/api/v0/accounts/${account_id}/external_accounts/plaid`, {
+            method: 'PATCH',
+            headers: {
+                'Identity': identity,
+                'Authorization': authorization,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                linked_account_id,
+            }),
+        });
+
+        const data = await res.json();
+
+        console.log('_updateLinkToken')
+        console.log(data)
+
+        return data;
+    }
 
     async _updateExternalAccount(account_id: string, { identity, authorization }: Credentials){
         const res = await fetch(`${this.bondHost}/api/v0/accounts/${account_id}`, {
@@ -355,33 +354,22 @@ class BondExternalAccounts {
     /**
      * Micro deposit.
      * @param {String} customer_id Set bond customer id.
-     * @param {String} account_id Set bond card account id.
+     * @param {String} card_account_id Set bond card account id.
      * @param {String} linked_account_id Set linked account id.
      * @param {String} identity Set identity token.
      * @param {String} authorization Set authorization token.
      */
-    async microDeposit({ accountId: account_id, linkedAccountId: linked_account_id, identity, authorization }: MicroDepositParams) {
+    async microDeposit({ accountId: card_account_id, linkedAccountId: linked_account_id, identity, authorization }: MicroDepositParams) {
         const credentials: Credentials = {
             identity,
             authorization,
         }
 
-        // const { account_id, link_token } = await this._createExternalAccount(customer_id, credentials);
-        //
-        // const { public_token, metadata } = await this._initializePlaidLink(link_token);
-        //
-        // const external_account_id = metadata.account_id;
-        //
-        // const payload = {
-        //     public_token,
-        //     external_account_id,
-        //     verification_status: metadata.account.verification_status || 'instantly_verified',
-        //     bank_name: metadata.institution.name,
-        // }
+        const { link_token } = await this._updateLinkToken(card_account_id, linked_account_id, credentials)
 
-        // const a = await this._updateLinkToken(card_account_id, linked_account_id, credentials)
+        const { public_token, metadata } = await this._initializePlaidLink(link_token);
 
-        return await this._updateExternalAccount(account_id, credentials)
+        return await this._updateExternalAccount(card_account_id, credentials)
     }
 }
 

@@ -7,13 +7,15 @@ const btn = document.getElementById('btn');
 btn.addEventListener('click', handleClick);
 
 function handleClick() {
-  const accountId = (<HTMLInputElement>document.getElementById('accountId')).value;
+  // const customerId = (<HTMLInputElement>document.getElementById('customerId')).value;
+  // const accountId = (<HTMLInputElement>document.getElementById('accountId')).value;
   const linkedAccountId = (<HTMLInputElement>document.getElementById('linkedAccountId')).value;
   const identity = (<HTMLInputElement>document.getElementById('identity')).value;
   const authorization = (<HTMLInputElement>document.getElementById('authorization')).value;
 
   bondExternalAccounts.microDeposit({
-    accountId,
+    // customerId,
+    // accountId,
     linkedAccountId,
     identity,
     authorization,

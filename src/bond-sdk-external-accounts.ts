@@ -9,9 +9,7 @@ interface LinkAccountParams extends Credentials {
 }
 
 interface MicroDepositParams extends Credentials {
-    customerId: string;
-    accountId: string;
-    // linkedAccountId: string;
+    linkedAccountId: string;
 }
 
 interface Payload {
@@ -71,6 +69,11 @@ interface LinkExternalAccountToCardAccountResponse {
     verification_status: string;
 }
 
+interface UpdateExternalAccountPayload {
+    new_link_token: boolean;
+    verification_status?: string;
+}
+
 /**
  * @classdesc Represents the Bond Account Connection SDK. It allows developers to
  * link external bank accounts with existing one.
@@ -108,7 +111,7 @@ class BondExternalAccounts {
         document.body.appendChild(script)
     }
 
-    _initializePlaidLink(link_token: string) {
+    _initializePlaidLink(link_token?: string) {
         return new Promise<PlaidResponse>((resolve, reject) => {
             try {
                 // @ts-ignore
@@ -310,28 +313,7 @@ class BondExternalAccounts {
         return await this._linkExternalAccountToCardAccount(card_account_id, account_id, credentials);
     }
 
-    async _updateLinkToken(account_id: string, linked_account_id: string, { identity, authorization }: Credentials) {
-        const res = await fetch(`${this.bondHost}/api/v0/accounts/${account_id}/external_accounts/plaid`, {
-            method: 'PATCH',
-            headers: {
-                'Identity': identity,
-                'Authorization': authorization,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                linked_account_id,
-            }),
-        });
-
-        const data = await res.json();
-
-        console.log('_updateLinkToken')
-        console.log(data)
-
-        return data;
-    }
-
-    async _updateExternalAccount(account_id: string, { identity, authorization }: Credentials){
+    async _updateExternalAccount(account_id: string, payload: UpdateExternalAccountPayload, { identity, authorization }: Credentials){
         const res = await fetch(`${this.bondHost}/api/v0/accounts/${account_id}`, {
             method: 'PATCH',
             headers: {
@@ -339,9 +321,7 @@ class BondExternalAccounts {
                 'Authorization': authorization,
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                new_link_token: true,
-            }),
+            body: JSON.stringify(payload),
         });
 
         const data = await res.json();
@@ -361,9 +341,7 @@ class BondExternalAccounts {
      * @param {String} authorization Set authorization token.
      */
     async microDeposit({
-       customerId: customer_id,
-       accountId: card_account_id,
-       // linkedAccountId: linked_account_id,
+       linkedAccountId: linked_account_id,
        identity,
        authorization
     }: MicroDepositParams) {
@@ -372,13 +350,16 @@ class BondExternalAccounts {
             authorization,
         }
 
-        // const { link_token } = await this._updateLinkToken(card_account_id, linked_account_id, credentials) // OLD
-
-        const { account_id, link_token } = await this._createExternalAccount(customer_id, credentials);
+        const { link_token } = await this._updateExternalAccount(linked_account_id, {
+            new_link_token: true,
+        }, credentials);
 
         const { public_token, metadata } = await this._initializePlaidLink(link_token);
 
-        return await this._updateExternalAccount(card_account_id, credentials)
+        return await this._updateExternalAccount(linked_account_id, {
+            new_link_token: false,
+            verification_status: metadata.account.verification_status,
+        }, credentials);
     }
 }
 

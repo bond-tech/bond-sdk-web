@@ -4,7 +4,8 @@ interface Credentials {
 }
 
 interface LinkAccountParams extends Credentials {
-    customerId: string;
+    businessId?: string;
+    customerId?: string;
     accountId: string;
 }
 
@@ -17,19 +18,6 @@ interface Payload {
     external_account_id: string;
     verification_status: string;
     bank_name: string;
-}
-
-interface CreateExternalAccountResponse {
-    account_id: string;
-    customer_id: string;
-    date_created: string;
-    date_updated: string;
-    expiration: string;
-    link_token: string;
-    link_type: string;
-    status: string;
-    type: string;
-    verification_status: string;
 }
 
 interface PlaidResponse {
@@ -56,16 +44,6 @@ interface PlaidResponse {
 interface ExchangingTokensResponse {
     access_token: string;
     status: string;
-    verification_status: string;
-}
-
-interface LinkExternalAccountToCardAccountResponse {
-    account_id: string;
-    date_created: string;
-    date_updated: string;
-    link_type: string;
-    status: string;
-    type: string;
     verification_status: string;
 }
 
@@ -157,21 +135,6 @@ class BondExternalAccounts {
 
        console.log('_exchangingTokens', data)
 
-        // Current:
-        // access_token: "access-sandbox-f0f9a83e-5568-441d-be1b-d12bdc207919"
-        // status: "active"
-        // verification_status: "instantly_verified"
-
-        // Expected:
-        // "account_id": "1a130d45-3dc3-4c58-b0d8-9784aae0d009",
-        // "type": "external",
-        // "link_type": "plaid",
-        // "status": "active",
-        // "verification_status": "instantly_verified",
-        // "access_token": "access-sandbox-035d67aa-5d6b-4014-98af-e09b7335ea31",
-        // "account_type": "checking",
-        // "account_category": "depository"
-
         return data;
     };
 
@@ -190,49 +153,10 @@ class BondExternalAccounts {
 
         const data = await res.json();
 
-        console.log('_linkExternalAccountToCardAccount')
-        console.log(data)
+        console.log('_linkExternalAccountToCardAccount', data)
 
         return data;
     }
-
-    _createAccessToken(accountId: string, identity: string, authorization: string, public_token: string, metadata, data) {
-        return new Promise((resolve, reject) => {
-            const verification_status = metadata.account.verification_status || 'instantly_verified';
-            const external_account_id = metadata.account.id;
-            const linked_account_id = data.linked_account_id;
-            const bank_name = metadata.institution.name || 'None';
-
-            fetch(`${this.bondHost}/api/v0/accounts/${accountId}/external_accounts/plaid`, {
-                    method: 'POST',
-                    headers: {
-                        'Identity': identity,
-                        'Authorization': authorization,
-                        'Content-type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        public_token,
-                        linked_account_id,
-                        external_account_id,
-                        status: verification_status,
-                        bank_name,
-                    }),
-                },
-            )
-                .then(response => response.json())
-                .then(data => {
-                    if (data.Status) {
-                        reject(data);
-                    } else {
-                        resolve({
-                            status: 'successfully_linked',
-                            linked_account_id,
-                        });
-                    }
-                })
-                .catch(reject);
-        });
-    };
 
     /**
      * Create an external account.
@@ -240,7 +164,7 @@ class BondExternalAccounts {
      * @param {String} identity Set identity token.
      * @param {String} authorization Set authorization token.
      */
-    async _createExternalAccount(customer_id: string, { identity, authorization }: Credentials) {
+    async _createExternalAccount(id: { customer_id?: string; business_id?: string }, { identity, authorization }: Credentials) {
 
         const res = await fetch(`${this.bondHost}/api/v0/accounts`, {
             method: 'POST',
@@ -249,33 +173,10 @@ class BondExternalAccounts {
                 'Authorization': authorization,
                 'Content-type': 'application/json',
             },
-            body: JSON.stringify({ type: 'external', link_type: 'plaid', customer_id })
+            body: JSON.stringify({ type: 'external', link_type: 'plaid', ...id })
         });
 
         const data = await res.json();
-
-        // Current:
-        // account_id: "dfa4d76a-2f63-4a4a-affd-4b75546522f7"
-        // type: "external"
-        // link_type: "plaid"
-        // status: null                                         // empty
-        // verification_status: null                            // empty
-        // link_token: "link-sandbox-2f99865b-26e5-4795-a664-b996f911e3e8"
-        // expiration: "2021-12-02T20:55:33Z"
-        // customer_id: "dac6afec-a868-42b6-88ad-b7a119a41f01"  // additional
-        // date_created: "2021-12-02T16:55:33.418560+00:00"
-        // date_updated: "2021-12-02T16:55:33.418570+00:00"
-
-        // Expected:
-        // "account_id": "2742ff6a-7455-4066-8b45-ae12d3acca34",
-        // "type": "external",
-        // "link_type": "plaid",
-        // "status": "active",
-        // "verification_status": "instantly_verified",
-        // "link_token": "link-sandbox-09fa148c-497a-4a22-87c9-581a7dea46de",
-        // "expiration": "2021-01-27t23:29:06z",
-        // "date_created": "2020-05-29t14:59:38.386850",
-        // "date_updated": "2020-05-29t14:59:38.386930",
 
         console.log('_createExternalAccount', data);
 
@@ -285,17 +186,19 @@ class BondExternalAccounts {
     /**
      * Connect external account.
      * @param {String} customer_id Set customer id.
+     * @param {String} business_id Set business id.
      * @param {String} card_account_id Set card account id.
      * @param {String} identity Set identity token.
      * @param {String} authorization Set authorization token.
      */
-    async linkAccount({ customerId: customer_id, accountId: card_account_id, identity, authorization }: LinkAccountParams) {
+    async linkAccount({ customerId: customer_id, businessId: business_id, accountId: card_account_id, identity, authorization }: LinkAccountParams) {
         const credentials: Credentials = {
             identity,
             authorization,
         }
 
-        const { account_id, link_token } = await this._createExternalAccount(customer_id, credentials);
+        // `account_id` is used as `linked_account_id` for micro deposit flow
+        const { account_id, link_token } = await this._createExternalAccount(customer_id ? { customer_id }: { business_id }, credentials);
 
         const { public_token, metadata } = await this._initializePlaidLink(link_token);
 
@@ -304,7 +207,7 @@ class BondExternalAccounts {
         const payload = {
             public_token,
             external_account_id,
-            verification_status: metadata.account.verification_status || 'instantly_verified',
+            verification_status: metadata.account.verification_status,
             bank_name: metadata.institution.name,
         }
 
@@ -326,16 +229,13 @@ class BondExternalAccounts {
 
         const data = await res.json();
 
-        console.log('_updateExternalAccount')
-        console.log(data)
+        console.log('_updateExternalAccount', data)
 
         return data;
     }
 
     /**
      * Micro deposit.
-     * @param {String} customer_id Set bond customer id.
-     * @param {String} card_account_id Set bond card account id.
      * @param {String} linked_account_id Set linked account id.
      * @param {String} identity Set identity token.
      * @param {String} authorization Set authorization token.
@@ -354,7 +254,7 @@ class BondExternalAccounts {
             new_link_token: true,
         }, credentials);
 
-        const { public_token, metadata } = await this._initializePlaidLink(link_token);
+        const { metadata } = await this._initializePlaidLink(link_token);
 
         return await this._updateExternalAccount(linked_account_id, {
             new_link_token: false,

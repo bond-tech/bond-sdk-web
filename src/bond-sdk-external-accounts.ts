@@ -9,8 +9,9 @@ interface LinkAccountParams extends Credentials {
 }
 
 interface MicroDepositParams extends Credentials {
+    customerId: string;
     accountId: string;
-    linkedAccountId: string;
+    // linkedAccountId: string;
 }
 
 interface Payload {
@@ -359,13 +360,21 @@ class BondExternalAccounts {
      * @param {String} identity Set identity token.
      * @param {String} authorization Set authorization token.
      */
-    async microDeposit({ accountId: card_account_id, linkedAccountId: linked_account_id, identity, authorization }: MicroDepositParams) {
+    async microDeposit({
+       customerId: customer_id,
+       accountId: card_account_id,
+       // linkedAccountId: linked_account_id,
+       identity,
+       authorization
+    }: MicroDepositParams) {
         const credentials: Credentials = {
             identity,
             authorization,
         }
 
-        const { link_token } = await this._updateLinkToken(card_account_id, linked_account_id, credentials)
+        // const { link_token } = await this._updateLinkToken(card_account_id, linked_account_id, credentials) // OLD
+
+        const { account_id, link_token } = await this._createExternalAccount(customer_id, credentials);
 
         const { public_token, metadata } = await this._initializePlaidLink(link_token);
 

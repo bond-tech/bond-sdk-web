@@ -3,8 +3,12 @@ interface Credentials {
     authorization: string;
 }
 interface LinkAccountParams extends Credentials {
-    customerId: string;
+    businessId?: string;
+    customerId?: string;
     accountId: string;
+}
+interface MicroDepositParams extends Credentials {
+    linkedAccountId: string;
 }
 interface Payload {
     public_token: string;
@@ -32,10 +36,9 @@ interface PlaidResponse {
         public_token: string;
     };
 }
-interface ExchangingTokensResponse {
-    access_token: string;
-    status: string;
-    verification_status: string;
+interface UpdateExternalAccountPayload {
+    new_link_token: boolean;
+    verification_status?: string;
 }
 /**
  * @classdesc Represents the Bond Account Connection SDK. It allows developers to
@@ -59,43 +62,41 @@ declare class BondExternalAccounts {
         bondEnv: string;
     });
     _appendPlaidLinkInitializeScript(): void;
-    _initializePlaidLink(link_token: string): Promise<PlaidResponse>;
-    _exchangingTokens(account_id: string, payload: Payload, { identity, authorization }: Credentials): Promise<ExchangingTokensResponse>;
+    _initializePlaidLink(link_token?: string): Promise<PlaidResponse>;
+    _exchangingTokens(account_id: string, payload: Payload, { identity, authorization }: Credentials): Promise<any>;
     _linkExternalAccountToCardAccount(card_account_id: string, external_account_id: string, { identity, authorization }: Credentials): Promise<any>;
-    _createAccessToken(accountId: string, identity: string, authorization: string, public_token: string, metadata: any, data: any): Promise<unknown>;
     /**
      * Create an external account.
-     * @param {String} customer_id Set customer id.
+     * @param {String} id Set customer id.
      * @param {String} identity Set identity token.
      * @param {String} authorization Set authorization token.
      */
-    _createExternalAccount(customer_id: string, { identity, authorization }: Credentials): Promise<any>;
+    _createExternalAccount(id: {
+        customer_id?: string;
+        business_id?: string;
+    }, { identity, authorization }: Credentials): Promise<any>;
     /**
      * Connect external account.
-     * @param {String} customerId Set customer id.
-     * @param {String} accountId Set card account id.
+     * @param {String} customer_id Set customer id.
+     * @param {String} business_id Set business id.
+     * @param {String} card_account_id Set card account id.
      * @param {String} identity Set identity token.
      * @param {String} authorization Set authorization token.
      */
-    linkAccount({ customerId: customer_id, accountId: card_account_id, identity, authorization }: LinkAccountParams): Promise<any>;
-    _updateLinkToken({ accountId, linkedAccountId, identity, authorization }: {
-        linkedAccountId: string;
-        accountId: string;
-        identity: string;
-        authorization: string;
-    }): Promise<any>;
+    linkAccount({ customerId: customer_id, businessId: business_id, accountId: card_account_id, identity, authorization }: LinkAccountParams): Promise<any>;
+    _updateExternalAccount(account_id: string, payload: UpdateExternalAccountPayload, { identity, authorization }: Credentials): Promise<any>;
     /**
      * Micro deposit.
-     * @param {String} accountId Set bond account id.
-     * @param {String} linkedAccountId Set linked account id.
+     * @param {String} linked_account_id Set linked account id.
      * @param {String} identity Set identity token.
      * @param {String} authorization Set authorization token.
      */
-    microDeposit({ accountId, linkedAccountId, identity, authorization }: {
-        linkedAccountId: string;
-        accountId: string;
-        identity: string;
-        authorization: string;
+    microDeposit({ linkedAccountId: linked_account_id, identity, authorization }: MicroDepositParams): Promise<any>;
+    _deleteExternalAccount(account_id: string, { identity, authorization }: Credentials): Promise<any>;
+    deleteExternalAccount({ accountId: account_id, identity, authorization }: {
+        accountId: any;
+        identity: any;
+        authorization: any;
     }): Promise<any>;
 }
 export default BondExternalAccounts;

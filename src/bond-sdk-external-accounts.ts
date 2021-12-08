@@ -41,12 +41,6 @@ interface PlaidResponse {
     };
 }
 
-interface ExchangingTokensResponse {
-    access_token: string;
-    status: string;
-    verification_status: string;
-}
-
 interface UpdateExternalAccountPayload {
     new_link_token: boolean;
     verification_status?: string;
@@ -131,11 +125,7 @@ class BondExternalAccounts {
             body: JSON.stringify(payload),
         });
 
-        const data: ExchangingTokensResponse = await res.json();
-
-       console.log('_exchangingTokens', data)
-
-        return data;
+        return await res.json();
     };
 
     async _linkExternalAccountToCardAccount(card_account_id: string, external_account_id: string, { identity, authorization }: Credentials) {
@@ -151,11 +141,7 @@ class BondExternalAccounts {
             }),
         })
 
-        const data = await res.json();
-
-        console.log('_linkExternalAccountToCardAccount', data)
-
-        return data;
+        return await res.json();
     }
 
     /**
@@ -176,11 +162,7 @@ class BondExternalAccounts {
             body: JSON.stringify({ type: 'external', link_type: 'plaid', ...id })
         });
 
-        const data = await res.json();
-
-        console.log('_createExternalAccount', data);
-
-        return data;
+        return await res.json();
     }
 
     /**
@@ -227,11 +209,7 @@ class BondExternalAccounts {
             body: JSON.stringify(payload),
         });
 
-        const data = await res.json();
-
-        console.log('_updateExternalAccount', data)
-
-        return data;
+        return await res.json();
     }
 
     /**
@@ -276,11 +254,7 @@ class BondExternalAccounts {
             }),
         });
 
-        const data = await res.json();
-
-        console.log('_deleteExternalAccount', data)
-
-        return data;
+        return await res.json();
     }
 
     async deleteExternalAccount({

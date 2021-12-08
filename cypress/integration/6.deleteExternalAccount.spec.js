@@ -128,22 +128,18 @@ context('Actions', () => {
     // custom command in the /cypress/support/commands.js file
     cy.fillAndSubmit(externalAccountId)
 
-    cy.wait('@apiDeleteExternalAccountToCardAccount').then(() => {
+    cy.wait('@apiDeleteExternalAccountToCardAccount').then((interception) => {
+      const body = interception.response.body;
 
-      cy.window().then(win=> {
-        const payload = win.sessionStorage.getItem('DELETE_ACCOUNT_SUCCESS');
-        const parsed = JSON.parse(payload);
-
-        expect(parsed.account_id).eq(externalAccountId);
-        expect(parsed.business_id).to.be.null;
-        expect(parsed).to.have.property('customer_id');
-        expect(parsed).to.have.property('date_created');
-        expect(parsed).to.have.property('deleted_at');
-        expect(parsed.link_type).eq('plaid');
-        expect(parsed.status).eq('removed');
-        expect(parsed.type).eq('external');
-        expect(parsed.verification_status).eq('instantly_verified');
-      });
+      expect(body.account_id).eq(externalAccountId);
+      expect(body.business_id).to.be.null;
+      expect(body).to.have.property('customer_id');
+      expect(body).to.have.property('date_created');
+      expect(body).to.have.property('deleted_at');
+      expect(body.link_type).eq('plaid');
+      expect(body.status).eq('removed');
+      expect(body.type).eq('external');
+      expect(body.verification_status).eq('instantly_verified');
     })
   });
 

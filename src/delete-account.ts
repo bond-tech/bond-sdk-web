@@ -7,25 +7,21 @@ const btn = document.getElementById('btn');
 btn.addEventListener('click', handleClick);
 
 function handleClick() {
-  // const customerId = (<HTMLInputElement>document.getElementById('customerId')).value;
-  // const accountId = (<HTMLInputElement>document.getElementById('accountId')).value;
-  const linkedAccountId = (<HTMLInputElement>document.getElementById('linkedAccountId')).value;
+  const accountId = (<HTMLInputElement>document.getElementById('accountId')).value;
   const identity = (<HTMLInputElement>document.getElementById('identity')).value;
   const authorization = (<HTMLInputElement>document.getElementById('authorization')).value;
 
-  bondExternalAccounts.microDeposit({
-    // customerId,
-    // accountId,
-    linkedAccountId,
+  bondExternalAccounts.deleteExternalAccount({
+    accountId,
     identity,
     authorization,
   })
     .then(data => {
       console.log(data);
-      sessionStorage.setItem('MICRO_DEPOSIT_SUCCESS', JSON.stringify(data))
+      sessionStorage.setItem('DELETE_ACCOUNT_SUCCESS', JSON.stringify(data))
     })
     .catch(error => {
       console.error(error);
-      sessionStorage.setItem('MICRO_DEPOSIT_ERROR', JSON.stringify(error))
+      sessionStorage.setItem('DELETE_ACCOUNT_ERROR', JSON.stringify(error))
     });
 }

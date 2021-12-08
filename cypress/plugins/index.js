@@ -41,6 +41,7 @@ module.exports = (on, config) => {
     DEBIT_CARD_CVV: process.env.CYPRESS_DEBIT_CARD_CVV,
     DEBIT_CARD_PIN: process.env.CYPRESS_DEBIT_CARD_PIN,
     DEBIT_CARD_NEW_PIN: process.env.CYPRESS_DEBIT_CARD_NEW_PIN,
+    customerId: process.env.CUSTOMER_ID,
     accountId: process.env.ACCOUNT_ID,
     identityForExternalAccountsSDK: process.env.IDENTITY_FOR_EXTERNAL_ACCOUNTS_SDK,
     authorizationForExternalAccountsSDK: process.env.AUTHORIZATION_FOR_EXTERNAL_ACCOUNTS_SDK,

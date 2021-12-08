@@ -13,6 +13,7 @@ module.exports = {
     ],
     'link-account': path.resolve(__dirname, './src/link-account.ts'),
     'micro-deposit': path.resolve(__dirname, './src/micro-deposit.ts'),
+    'delete-account': path.resolve(__dirname, './src/delete-account.ts'),
     index: path.resolve(__dirname, "./src/sample-card-show.ts"),
     multiple: path.resolve(__dirname, "./src/sample-card-show-multiple.ts"),
     pin: path.resolve(__dirname, "./src/sample-pin-setting.ts"),
@@ -107,6 +108,12 @@ module.exports = {
       inject: true,
       chunks: ['bond-sdk-web', 'micro-deposit'],
       filename: 'micro-deposit.html', // output file
+    }),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, './src/delete-account.html'),
+      inject: true,
+      chunks: ['bond-sdk-web', 'delete-account'],
+      filename: 'delete-account.html', // output file
     }),
   ],
 };

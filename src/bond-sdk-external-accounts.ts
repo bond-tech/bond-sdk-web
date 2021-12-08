@@ -160,7 +160,7 @@ class BondExternalAccounts {
 
     /**
      * Create an external account.
-     * @param {String} customer_id Set customer id.
+     * @param {String} id Set customer id.
      * @param {String} identity Set identity token.
      * @param {String} authorization Set authorization token.
      */
@@ -207,7 +207,7 @@ class BondExternalAccounts {
         const payload = {
             public_token,
             external_account_id,
-            verification_status: metadata.account.verification_status,
+            verification_status: metadata.account.verification_status || 'instantly_verified',
             bank_name: metadata.institution.name,
         }
 
@@ -260,6 +260,40 @@ class BondExternalAccounts {
             new_link_token: false,
             verification_status: metadata.account.verification_status,
         }, credentials);
+    }
+
+    async _deleteExternalAccount(account_id: string, { identity, authorization }: Credentials){
+        const res = await fetch(`${this.bondHost}/api/v0/accounts/${account_id}`, {
+            method: 'DELETE',
+            headers: {
+                'Identity': identity,
+                'Authorization': authorization,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                type: 'external',
+                link_type: 'plaid'
+            }),
+        });
+
+        const data = await res.json();
+
+        console.log('_deleteExternalAccount', data)
+
+        return data;
+    }
+
+    async deleteExternalAccount({
+        accountId: account_id,
+        identity,
+        authorization
+    }){
+        const credentials: Credentials = {
+            identity,
+            authorization,
+        }
+
+        return await this._deleteExternalAccount(account_id, credentials);
     }
 }
 

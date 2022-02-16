@@ -20,23 +20,56 @@ interface Payload {
     bank_name: string;
 }
 
-interface PlaidResponse {
+type PlaidInsitution = {
+    name: string;
+    institution_id: string;
+};
+
+type PlaidError = {
+    error_type: string;
+    error_code: string;
+    error_message: string;
+    display_message: string;
+};
+
+type PlaidExitResponse = {
+    // https://plaid.com/docs/link/web/#onexit
+    error: PlaidError;
+    metadata: {
+        institution: PlaidInsitution;
+        status: string;
+        // values: 
+        // requires_questions
+        // requires_selections
+        // requires_code
+        // choose_device
+        // requires_credentials
+        // requires_oauth
+        // institution_not_found
+        link_session_id: string;
+        request_id: string;
+    };
+}
+
+type PlaidAccount = {
+    id: string;
+    mask: string;
+    name: string;
+    subtype: string;
+    type: string;
+    verification_status: string;
+}
+
+type PlaidSuccessResponse = {
+    // https://plaid.com/docs/link/web/#onsuccess
     public_token: string;
     metadata: {
-        account: {
-            id: string;
-            mask: string;
-            name: string;
-            subtype: string;
-            type: string;
-            verification_status: string;
-        };
+        institution: PlaidInsitution;
+        // LIST of accounts... account deprecated?
+        account: PlaidAccount;
         account_id: string;
-        institution: {
-            name: string;
-            institution_id: string;
-        };
         link_session_id: string;
+        transfer_status?: string;
         public_token: string;
     };
 }
@@ -84,27 +117,28 @@ class BondExternalAccounts {
     }
 
     _initializePlaidLink(link_token?: string) {
-        return new Promise<PlaidResponse>((resolve, reject) => {
+        return new Promise<PlaidExitResponse|PlaidSuccessResponse>((resolve, reject) => {
             try {
                 // @ts-ignore
                 const handler = Plaid.create({
                     env: this.plaidEnv,
                     token: link_token,
                     onSuccess: (public_token, metadata) => {
-                        console.log('_initializePlaidLink')
-                        console.log('public_token', public_token)
-                        console.log('metadata', metadata)
-                        resolve({ public_token, metadata })
+                        console.log('_initializePlaidLink');
+                        console.log('public_token', public_token);
+                        console.log('metadata', metadata);
+                        resolve({ public_token, metadata });
                     },
                     onLoad: () => {
                         // console.log('load');
                         handler.open();
                     },
-                    onExit: (err, metadata) => {
-                        // console.log('exit');
+                    onExit: (error, metadata) => {
+                        resolve({ error, metadata });
                     },
                     onEvent: (eventName, metadata) => {
-                        // console.log(`event: ${eventName}`);
+                        console.log(`event: ${eventName}`);
+
                     },
                     receivedRedirectUri: null,
                 });
@@ -173,29 +207,46 @@ class BondExternalAccounts {
      * @param {String} identity Set identity token.
      * @param {String} authorization Set authorization token.
      */
-    async linkAccount({ customerId: customer_id, businessId: business_id, accountId: card_account_id, identity, authorization }: LinkAccountParams) {
+    async linkAccount({ 
+        customerId: customer_id, 
+        businessId: business_id, 
+        accountId: card_account_id, 
+        identity, authorization
+    }: LinkAccountParams) {
         const credentials: Credentials = {
             identity,
             authorization,
         }
 
         // `account_id` is used as `linked_account_id` for micro deposit flow
-        const { account_id, link_token } = await this._createExternalAccount(customer_id ? { customer_id }: { business_id }, credentials);
+        const { account_id, link_token } = await this._createExternalAccount(
+            customer_id ? { customer_id }: { business_id }, credentials
+        );
 
-        const { public_token, metadata } = await this._initializePlaidLink(link_token);
+        const response = await this._initializePlaidLink(link_token);
+        if( (response as PlaidExitResponse).error ) {
+            
+            return (response as PlaidExitResponse);
 
-        const external_account_id = metadata.account_id;
+        } else if( (response as PlaidSuccessResponse).public_token ) {
 
-        const payload = {
-            public_token,
-            external_account_id,
-            verification_status: metadata.account.verification_status || 'instantly_verified',
-            bank_name: metadata.institution.name,
+            const successResponse = response as PlaidSuccessResponse;
+            const public_token = successResponse.public_token;
+            const metadata = successResponse.metadata;
+            const external_account_id = metadata.account_id;
+
+            const payload = {
+                public_token,
+                external_account_id,
+                verification_status: metadata.account.verification_status || 'instantly_verified',
+                bank_name: metadata.institution.name,
+            }
+
+            await this._exchangingTokens(account_id, payload, credentials);
+
+            return await this._linkExternalAccountToCardAccount(card_account_id, account_id, credentials);
+
         }
-
-        await this._exchangingTokens(account_id, payload, credentials);
-
-        return await this._linkExternalAccountToCardAccount(card_account_id, account_id, credentials);
     }
 
     async _updateExternalAccount(account_id: string, payload: UpdateExternalAccountPayload, { identity, authorization }: Credentials){
@@ -221,7 +272,7 @@ class BondExternalAccounts {
     async microDeposit({
        linkedAccountId: linked_account_id,
        identity,
-       authorization
+       authorization,
     }: MicroDepositParams) {
         const credentials: Credentials = {
             identity,
@@ -232,12 +283,17 @@ class BondExternalAccounts {
             new_link_token: true,
         }, credentials);
 
-        const { metadata } = await this._initializePlaidLink(link_token);
-
-        return await this._updateExternalAccount(linked_account_id, {
-            new_link_token: false,
-            verification_status: metadata.account.verification_status,
-        }, credentials);
+        const response = await this._initializePlaidLink(link_token);
+        if( (response as PlaidExitResponse).error ) {
+            return (response as PlaidExitResponse);
+        } else if( (response as PlaidSuccessResponse).public_token ) {
+            const successResponse = response as PlaidSuccessResponse;
+            const metadata = successResponse.metadata;
+            return await this._updateExternalAccount(linked_account_id, {
+                new_link_token: false,
+                verification_status: metadata.account.verification_status,
+            }, credentials);
+        }
     }
 
     async _deleteExternalAccount(account_id: string, { identity, authorization }: Credentials){

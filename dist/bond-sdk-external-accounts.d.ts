@@ -16,26 +16,44 @@ interface Payload {
     verification_status: string;
     bank_name: string;
 }
-interface PlaidResponse {
+declare type PlaidInsitution = {
+    name: string;
+    institution_id: string;
+};
+declare type PlaidError = {
+    error_type: string;
+    error_code: string;
+    error_message: string;
+    display_message: string;
+};
+declare type PlaidExitResponse = {
+    error: PlaidError;
+    metadata: {
+        institution: PlaidInsitution;
+        status: string;
+        link_session_id: string;
+        request_id: string;
+    };
+};
+declare type PlaidAccount = {
+    id: string;
+    mask: string;
+    name: string;
+    subtype: string;
+    type: string;
+    verification_status: string;
+};
+declare type PlaidSuccessResponse = {
     public_token: string;
     metadata: {
-        account: {
-            id: string;
-            mask: string;
-            name: string;
-            subtype: string;
-            type: string;
-            verification_status: string;
-        };
+        institution: PlaidInsitution;
+        account: PlaidAccount;
         account_id: string;
-        institution: {
-            name: string;
-            institution_id: string;
-        };
         link_session_id: string;
+        transfer_status?: string;
         public_token: string;
     };
-}
+};
 interface UpdateExternalAccountPayload {
     new_link_token: boolean;
     verification_status?: string;
@@ -62,7 +80,7 @@ declare class BondExternalAccounts {
         bondEnv: string;
     });
     _appendPlaidLinkInitializeScript(): void;
-    _initializePlaidLink(link_token?: string): Promise<PlaidResponse>;
+    _initializePlaidLink(link_token?: string): Promise<PlaidExitResponse | PlaidSuccessResponse>;
     _exchangingTokens(account_id: string, payload: Payload, { identity, authorization }: Credentials): Promise<any>;
     _linkExternalAccountToCardAccount(card_account_id: string, external_account_id: string, { identity, authorization }: Credentials): Promise<any>;
     /**
@@ -91,7 +109,7 @@ declare class BondExternalAccounts {
      * @param {String} identity Set identity token.
      * @param {String} authorization Set authorization token.
      */
-    microDeposit({ linkedAccountId: linked_account_id, identity, authorization }: MicroDepositParams): Promise<any>;
+    microDeposit({ linkedAccountId: linked_account_id, identity, authorization, }: MicroDepositParams): Promise<any>;
     _deleteExternalAccount(account_id: string, { identity, authorization }: Credentials): Promise<any>;
     deleteExternalAccount({ accountId: account_id, identity, authorization }: {
         accountId: any;

@@ -134,11 +134,11 @@ class BondExternalAccounts {
                         handler.open();
                     },
                     onExit: (error, metadata) => {
+                        // console.log("exit");
                         resolve({ error, metadata });
                     },
                     onEvent: (eventName, metadata) => {
-                        console.log(`event: ${eventName}`);
-
+                        // console.log(`event: ${eventName}`);
                     },
                     receivedRedirectUri: null,
                 });
@@ -224,8 +224,7 @@ class BondExternalAccounts {
         );
 
         const response = await this._initializePlaidLink(link_token);
-        if( (response as PlaidExitResponse).error ) {
-            
+        if( (response as PlaidExitResponse).error || (response as PlaidExitResponse).metadata ) {
             return (response as PlaidExitResponse);
 
         } else if( (response as PlaidSuccessResponse).public_token ) {
@@ -284,7 +283,7 @@ class BondExternalAccounts {
         }, credentials);
 
         const response = await this._initializePlaidLink(link_token);
-        if( (response as PlaidExitResponse).error ) {
+        if( (response as PlaidExitResponse).error || (response as PlaidExitResponse).metadata ) {
             return (response as PlaidExitResponse);
         } else if( (response as PlaidSuccessResponse).public_token ) {
             const successResponse = response as PlaidSuccessResponse;

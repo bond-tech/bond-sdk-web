@@ -45,20 +45,8 @@ type PlaidSuccessResponse = {
     public_token: string;
     metadata: {
         institution: PlaidInsitution;
-        /*{
-            name: string;
-            institution_id: string;
-        };*/
         account_id: string;
         account: PlaidAccount;
-        /*{
-            id: string;
-            mask: string;
-            name: string;
-            subtype: string;
-            type: string;
-            verification_status: string;
-        };*/
         link_session_id: string;
         public_token: string;
     };
@@ -136,13 +124,13 @@ class BondExternalAccounts {
                         console.log('_initializePlaidLink')
                         console.log('public_token', public_token)
                         console.log('metadata', metadata)
-                        resolve({ public_token, metadata })
+                        resolve({ public_token, metadata } as PlaidSuccessResponse)
                     },
                     onLoad: () => {
                         handler.open();
                     },
                     onExit: (error, metadata) => {
-                        resolve({ error, metadata });
+                        resolve({ error, metadata } as PlaidExitResponse);
                     },
                     onEvent: (eventName, metadata) => {
                         // console.log(`event: ${eventName}`);
@@ -156,6 +144,7 @@ class BondExternalAccounts {
     };
 
    async  _exchangingTokens(account_id: string, payload: Payload, { identity, authorization }: Credentials) {
+        console.log(`starting token exchange for ${account_id}`);
         const res = await fetch(`${this.bondHost}/api/v0/accounts/${account_id}`, {
             method: 'POST',
             headers: {
@@ -165,8 +154,9 @@ class BondExternalAccounts {
             },
             body: JSON.stringify(payload),
         });
-
-        return await res.json();
+        const data = await res.json();
+        console.log(`result: ${res.status}, ${data}`);
+        return data; // await res.json();
     };
 
     async _linkExternalAccountToCardAccount(card_account_id: string, external_account_id: string, { identity, authorization }: Credentials) {
@@ -224,11 +214,7 @@ class BondExternalAccounts {
         const { account_id, link_token } = await this._createExternalAccount(customer_id ? { customer_id }: { business_id }, credentials);
 
         const response = await this._initializePlaidLink(link_token);
-        if( (response as PlaidExitResponse).error || (response as PlaidExitResponse).metadata ) {
-            return (response as PlaidExitResponse);
-
-        } else if( (response as PlaidSuccessResponse).public_token ) {
-
+        if( (response as PlaidSuccessResponse).public_token ) {
             const successResponse = response as PlaidSuccessResponse;
             const public_token = successResponse.public_token;
             const metadata = successResponse.metadata;
@@ -245,6 +231,8 @@ class BondExternalAccounts {
 
             return await this._linkExternalAccountToCardAccount(card_account_id, account_id, credentials);
 
+        } else {
+            return (response as PlaidExitResponse);
         }
 
     }
@@ -284,15 +272,15 @@ class BondExternalAccounts {
         }, credentials);
         
         const response = await this._initializePlaidLink(link_token);
-        if( (response as PlaidExitResponse).error || (response as PlaidExitResponse).metadata ) {
-            return (response as PlaidExitResponse);
-        } else if( (response as PlaidSuccessResponse).public_token ) {
+        if( (response as PlaidSuccessResponse).public_token ) {
             const successResponse = response as PlaidSuccessResponse;
             const metadata = successResponse.metadata;
             return await this._updateExternalAccount(linked_account_id, {
                 new_link_token: false,
                 verification_status: metadata.account.verification_status,
             }, credentials);
+        } else {
+            return (response as PlaidExitResponse);
         }
 
     }

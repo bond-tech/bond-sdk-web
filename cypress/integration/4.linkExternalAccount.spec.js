@@ -14,16 +14,10 @@ context('Actions', () => {
       url: `https://sandbox.plaid.com/link/heartbeat`,
     }).as('apiPlaidHeartbeat')
 
-    /*cy.intercept({
-      method: 'POST',
-      url: `${Cypress.env('serverEndpoint')}/*`,
-    }).as('apiExchangingTokens')*/
-    Cypress.config('defaultCommandTimeout', 30000);
     cy.intercept({
       method: 'POST',
       url: `${Cypress.env('serverEndpoint')}/*`,
-    }).as('apiExchangingTokens');
-    Cypress.config('defaultCommandTimeout', 5000);
+    }).as('apiExchangingTokens')
 
     cy.intercept({
       method: 'PATCH',

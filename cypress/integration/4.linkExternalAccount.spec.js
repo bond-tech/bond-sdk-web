@@ -80,7 +80,7 @@ context('Actions', () => {
 
           cy.wait(2000);
 
-          cy.wait('@apiExchangingTokens').then((interception) => {
+          cy.wait(10000, '@apiExchangingTokens').then((interception) => {
             const body = interception.response.body;
 
             expect(body.status).to.eq('active');

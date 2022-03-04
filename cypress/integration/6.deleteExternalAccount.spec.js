@@ -4,6 +4,7 @@ let externalAccountId;
 
 context('Actions', () => {
   beforeEach(() => {
+
     cy.intercept({
       method: 'POST',
       url: `${Cypress.env('serverEndpoint')}`,
@@ -14,10 +15,12 @@ context('Actions', () => {
       url: `https://sandbox.plaid.com/link/heartbeat`,
     }).as('apiPlaidHeartbeat')
 
+    cy.config('defaultCommandTimeout', 30000);
     cy.intercept({
       method: 'POST',
       url: `${Cypress.env('serverEndpoint')}/*`,
-    }).as('apiExchangingTokens')
+    }).as('apiExchangingTokens');
+    cy.config('defaultCommandTimeout', 5000);
 
     cy.intercept({
       method: 'PATCH',

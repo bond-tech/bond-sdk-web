@@ -14,10 +14,16 @@ context('Actions', () => {
       url: `https://sandbox.plaid.com/link/heartbeat`,
     }).as('apiPlaidHeartbeat')
 
+    /*cy.intercept({
+      method: 'POST',
+      url: `${Cypress.env('serverEndpoint')}/*`,
+    }).as('apiExchangingTokens')*/
+    cy.config('defaultCommandTimeout', 30000);
     cy.intercept({
       method: 'POST',
       url: `${Cypress.env('serverEndpoint')}/*`,
-    }).as('apiExchangingTokens')
+    }).as('apiExchangingTokens');
+    cy.config('defaultCommandTimeout', 5000);
 
     cy.intercept({
       method: 'PATCH',
@@ -80,7 +86,7 @@ context('Actions', () => {
 
           cy.wait(2000);
 
-          cy.wait(10000, '@apiExchangingTokens').then((interception) => {
+          cy.wait('@apiExchangingTokens').then((interception) => {
             const body = interception.response.body;
 
             expect(body.status).to.eq('active');

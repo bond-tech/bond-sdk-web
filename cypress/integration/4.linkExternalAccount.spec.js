@@ -18,12 +18,12 @@ context('Actions', () => {
       method: 'POST',
       url: `${Cypress.env('serverEndpoint')}/*`,
     }).as('apiExchangingTokens')*/
-    cy.config('defaultCommandTimeout', 30000);
+    Cypress.config('defaultCommandTimeout', 30000);
     cy.intercept({
       method: 'POST',
       url: `${Cypress.env('serverEndpoint')}/*`,
     }).as('apiExchangingTokens');
-    cy.config('defaultCommandTimeout', 5000);
+    Cypress.config('defaultCommandTimeout', 5000);
 
     cy.intercept({
       method: 'PATCH',

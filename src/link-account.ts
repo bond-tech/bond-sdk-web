@@ -1,4 +1,4 @@
-import { BondExternalAccounts } from './bond-sdk-web';
+import { BondExternalAccounts, PlaidExitResponse, PlaidSuccessResponse } from './bond-sdk-web';
 
 const bondExternalAccounts = new BondExternalAccounts({ bondEnv: 'sandbox.staging' });
 
@@ -20,10 +20,14 @@ function handleClick() {
   })
     .then(data => {
       console.log(data);
-      sessionStorage.setItem('CONNECT_ACCOUNT_SUCCESS', JSON.stringify(data))
+      if( (response as PlaidSuccessResponse).public_token ) {
+        sessionStorage.setItem('CONNECT_ACCOUNT_SUCCESS', JSON.stringify(data));
+      } else {
+        sessionStorage.setItem('CONNECT_ACCOUNT_EXIT', JSON.stringify(data));
+      }
     })
     .catch(error => {
       console.error(error);
-      sessionStorage.setItem('CONNECT_ACCOUNT_ERROR', JSON.stringify(error))
+      sessionStorage.setItem('CONNECT_ACCOUNT_ERROR', JSON.stringify(error));
     });
 }

@@ -111,6 +111,43 @@ context('Actions', () => {
     })
   });
 
+  it('Link external account immediate exit', () => {
+
+    // custom command in the /cypress/support/commands.js file
+    cy.fillAndSubmit()
+
+    cy.wait('@apiCreateExternalAccount').then(interception => {
+      const { body } = interception.response;
+
+      expect(body.account_id).not.null;
+      expect(body.link_token).not.null;
+      expect(body.link_type).eq('plaid');
+      expect(body.type).eq('external');
+
+      cy.wait('@apiPlaidHeartbeat').then(() => {
+
+        cy.get('#plaid-link-iframe-1').then($iframe => {
+          const $body = $iframe.contents().find('body');
+
+          cy.wrap($body)
+            .find('.Navbar').find('button').first().click();
+
+          cy.window().then(win=> {
+            const payload = win.sessionStorage.getItem('CONNECT_ACCOUNT_EXIT');
+            const parsed = JSON.parse(payload);
+
+            expect(parsed).to.have.property('error');
+            expect(parsed).to.have.property('metadata');
+            // expect(parsed).to.have.property('status');
+            // expect(parsed).to.have.property('external_accounts');
+          });
+
+        })
+      })
+    })
+  });
+
+
   it('Link external account premature exit', () => {
 
     // custom command in the /cypress/support/commands.js file
@@ -136,66 +173,14 @@ context('Actions', () => {
           cy.wrap($body)
             .find('.Navbar').find('button').first().click();
 
-          /*
-          cy.wrap($body)
-            .find('.PaneContent .InstitutionSearchResult').first().find('button').first().click();
-
-          cy.wait(1000);
-
-          cy.wrap($body)
-            .find('#username').type('user_good');
-
-          cy.wrap($body)
-            .find('#password').type('pass_good');
-
-          cy.wrap($body)
-            .find('.ThreadsCredentialPane__form').first().find('button').first().click();
-
-          cy.wait(4000);
-
-          cy.wrap($body)
-            .find('.PaneContent .ListItem input').first().click();
-
-          cy.wait(1000);
-
-          // submit checkbox
-          cy.wrap($body)
-            .find('#aut-continue-button')
-            .click();
-
-          // submit form
-          cy.wrap($body)
-            .find('#aut-continue-button')
-            .click();
-
-          cy.wait(2000);
-
-          cy.wait('@apiExchangingTokens').then((interception) => {
-            const body = interception.response.body;
-
-            expect(body.status).to.eq('active');
-            expect(body.verification_status).to.eq('instantly_verified');
-            expect(body.access_token).not.null;
-          })
-
-          cy.wait(2000);
-
-          cy.wait('@apiLinkExternalAccountToCardAccount').then((interception) => {
-            const body = interception.response.body;
-
-            expect(body.status).to.eq('Active');
-            expect(body.account_id).not.null;
-          })
-          */
-
           cy.window().then(win=> {
-            const payload = win.sessionStorage.getItem('CONNECT_ACCOUNT_SUCCESS');
+            const payload = win.sessionStorage.getItem('CONNECT_ACCOUNT_EXIT');
             const parsed = JSON.parse(payload);
 
             expect(parsed).to.have.property('error');
             expect(parsed).to.have.property('metadata');
             // expect(parsed).to.have.property('status');
-            //expect(parsed).to.have.property('external_accounts');
+            // expect(parsed).to.have.property('external_accounts');
           });
 
         })

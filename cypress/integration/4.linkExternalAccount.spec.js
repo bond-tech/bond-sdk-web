@@ -134,6 +134,10 @@ context('Actions', () => {
             .click();
 
           cy.wrap($body)
+            .find('.Navbar').find('button').first().click();
+
+          /*
+          cy.wrap($body)
             .find('.PaneContent .InstitutionSearchResult').first().find('button').first().click();
 
           cy.wait(1000);
@@ -182,16 +186,18 @@ context('Actions', () => {
             expect(body.status).to.eq('Active');
             expect(body.account_id).not.null;
           })
+          */
 
           cy.window().then(win=> {
             const payload = win.sessionStorage.getItem('CONNECT_ACCOUNT_SUCCESS');
             const parsed = JSON.parse(payload);
 
-            expect(parsed).to.have.property('account_id');
-            expect(parsed).to.have.property('card_id');
-            expect(parsed).to.have.property('status');
-            expect(parsed).to.have.property('external_accounts');
+            expect(parsed).to.have.property('error');
+            expect(parsed).to.have.property('metadata');
+            // expect(parsed).to.have.property('status');
+            //expect(parsed).to.have.property('external_accounts');
           });
+
         })
       })
     })

@@ -21,6 +21,7 @@ function handleClick() {
     .then(data => {
       console.log(data);
       sessionStorage.setItem('CONNECT_ACCOUNT_SUCCESS', JSON.stringify(data))
+      // data ~ PlaidExitResponse|PlaidSuccessResponse
     })
     .catch(error => {
       console.error(error);

@@ -121,16 +121,13 @@ class BondExternalAccounts {
                     env: this.plaidEnv,
                     token: link_token,
                     onSuccess: (public_token, metadata) => {
-                        console.log('_initializePlaidLink')
-                        console.log('public_token', public_token)
-                        console.log('metadata', metadata)
-                        resolve({ public_token, metadata } as PlaidSuccessResponse)
+                        resolve({ public_token, metadata });
                     },
                     onLoad: () => {
                         handler.open();
                     },
                     onExit: (error, metadata) => {
-                        resolve({ error, metadata } as PlaidExitResponse);
+                        resolve({ error, metadata });
                     },
                     onEvent: (eventName, metadata) => {
                         // console.log(`event: ${eventName}`);
@@ -227,9 +224,12 @@ class BondExternalAccounts {
                 bank_name: metadata.institution.name,
             }
 
-            await this._exchangingTokens(account_id, payload, credentials);
+            return await this._exchangingTokens(account_id, payload, credentials);
 
-            return await this._linkExternalAccountToCardAccount(card_account_id, account_id, credentials);
+            /*return await this._linkExternalAccountToCardAccount(
+                card_account_id, account_id, credentials
+            );*/
+
 
         } else {
             return (response as PlaidExitResponse);

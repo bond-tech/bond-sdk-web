@@ -123,11 +123,9 @@ class BondExternalAccounts {
 
         // `account_id` is used as `linked_account_id` for micro deposit flow
         const { account_id, link_token } = await this._createExternalAccount(customer_id ? { customer_id }: { business_id }, credentials);
+        console.log({ account_id, link_token })
 
-        console.log("created external account");
         const response = await this._initializePlaidLink(link_token);
-
-        console.log("init plaid link");
 
         if( (response as PlaidSuccessResponse).public_token ) {
             const successResponse = response as PlaidSuccessResponse;
@@ -144,7 +142,12 @@ class BondExternalAccounts {
 
             await this._exchangingTokens(account_id, payload, credentials);
 
-            return await this._linkExternalAccountToCardAccount(card_account_id, account_id, credentials);
+            const result = await this._linkExternalAccount(account_id, external_account_id, credentials);
+
+            console.log(result);
+
+            return result;
+            // return await this._linkExternalAccount(card_account_id, account_id, credentials);
 
         } else {
             // TODO: await this._deleteExternalAccount(account_id, credentials);
@@ -236,8 +239,8 @@ class BondExternalAccounts {
         return data; // await res.json();
     };
 
-    async _linkExternalAccountToCardAccount(card_account_id: string, external_account_id: string, { identity, authorization }: Credentials) {
-        const res = await fetch(`${this.bondHost}/api/v0/accounts/${card_account_id}`, {
+    async _linkExternalAccount(account_id: string, external_account_id: string, { identity, authorization }: Credentials) {
+        const res = await fetch(`${this.bondHost}/api/v0/accounts/${account_id}`, {
             method: 'PATCH',
             headers: {
                 'Identity': identity,
@@ -271,7 +274,7 @@ class BondExternalAccounts {
 
         return await res.json();
     }
-    
+
     async _updateExternalAccount(account_id: string, payload: UpdateExternalAccountPayload, { identity, authorization }: Credentials){
         const res = await fetch(`${this.bondHost}/api/v0/accounts/${account_id}`, {
             method: 'PATCH',

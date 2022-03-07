@@ -21,8 +21,10 @@ function handleClick() {
     .then(data => {
       console.log(data);
       if( data.public_token ) {
+        console.log("success");
         sessionStorage.setItem('CONNECT_ACCOUNT_SUCCESS', JSON.stringify(data));
       } else {
+        console.log("early exit");
         sessionStorage.setItem('CONNECT_ACCOUNT_EXIT', JSON.stringify(data));
       }
     })

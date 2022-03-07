@@ -123,11 +123,8 @@ class BondExternalAccounts {
 
         // `account_id` is used as `linked_account_id` for micro deposit flow
         const { account_id, link_token } = await this._createExternalAccount(customer_id ? { customer_id }: { business_id }, credentials);
-
-        console.log("created external account");
+        
         const response = await this._initializePlaidLink(link_token);
-
-        console.log("init plaid link");
 
         if( (response as PlaidSuccessResponse).public_token ) {
             const successResponse = response as PlaidSuccessResponse;

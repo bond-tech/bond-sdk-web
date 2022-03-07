@@ -1,4 +1,4 @@
-import { BondExternalAccounts, PlaidExitResponse, PlaidSuccessResponse } from './bond-sdk-web';
+import { BondExternalAccounts } from './bond-sdk-web';
 
 const bondExternalAccounts = new BondExternalAccounts({ bondEnv: 'sandbox.staging' });
 
@@ -20,7 +20,7 @@ function handleClick() {
   })
     .then(data => {
       console.log(data);
-      if( (response as PlaidSuccessResponse).public_token ) {
+      if( data.public_token ) {
         sessionStorage.setItem('CONNECT_ACCOUNT_SUCCESS', JSON.stringify(data));
       } else {
         sessionStorage.setItem('CONNECT_ACCOUNT_EXIT', JSON.stringify(data));

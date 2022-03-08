@@ -123,7 +123,6 @@ class BondExternalAccounts {
 
         // `account_id` is used as `linked_account_id` for micro deposit flow
         const { account_id, link_token } = await this._createExternalAccount(customer_id ? { customer_id }: { business_id }, credentials);
-        console.log({ account_id, link_token })
 
         const response = await this._initializePlaidLink(link_token);
 
@@ -141,13 +140,9 @@ class BondExternalAccounts {
             }
 
             await this._exchangingTokens(account_id, payload, credentials);
-
-            const result = await this._linkExternalAccount(account_id, external_account_id, credentials);
-
-            console.log(result);
-
-            return result;
-            // return await this._linkExternalAccount(card_account_id, account_id, credentials);
+            return
+            // TODO: return all external accounts
+            // return await this._getExternalAccounts(customer_id ? customer_id: business_id, credentials);
 
         } else {
             // TODO: await this._deleteExternalAccount(account_id, credentials);
@@ -223,7 +218,7 @@ class BondExternalAccounts {
         });
     };
 
-    async  _exchangingTokens(account_id: string, payload: Payload, { identity, authorization }: Credentials) {
+    async _exchangingTokens(account_id: string, payload: Payload, { identity, authorization }: Credentials) {
         console.log(`starting token exchange for ${account_id}`);
         const res = await fetch(`${this.bondHost}/api/v0/accounts/${account_id}`, {
             method: 'POST',
@@ -234,26 +229,9 @@ class BondExternalAccounts {
             },
             body: JSON.stringify(payload),
         });
-        const data = await res.json();
-        console.log(`result: ${res.status}, ${data}`);
-        return data; // await res.json();
-    };
-
-    async _linkExternalAccount(account_id: string, external_account_id: string, { identity, authorization }: Credentials) {
-        const res = await fetch(`${this.bondHost}/api/v0/accounts/${account_id}`, {
-            method: 'PATCH',
-            headers: {
-                'Identity': identity,
-                'Authorization': authorization,
-                'Content-type': 'application/json',
-            },
-            body: JSON.stringify({
-                add_external_accounts: [external_account_id]
-            }),
-        })
 
         return await res.json();
-    }
+    };
 
     /**
      * Create an external account.
@@ -270,6 +248,19 @@ class BondExternalAccounts {
                 'Content-type': 'application/json',
             },
             body: JSON.stringify({ type: 'external', link_type: 'plaid', ...id })
+        });
+
+        return await res.json();
+    }
+
+    async _getExternalAccounts(entity_id: string, { identity, authorization }: Credentials) {
+        const res = await fetch(`${this.bondHost}/api/v0/accounts/${entity_id}/external_accounts`, {
+            method: 'GET',
+            headers: {
+                'Identity': identity,
+                'Authorization': authorization,
+                'Content-type': 'application/json',
+            },
         });
 
         return await res.json();

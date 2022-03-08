@@ -20,8 +20,7 @@ function handleClick() {
   })
     .then(data => {
       console.log(data);
-      if( data.public_token ) {
-        console.log("success");
+      if( data.account_id ) {
         sessionStorage.setItem('CONNECT_ACCOUNT_SUCCESS', JSON.stringify(data));
       } else {
         console.log("early exit");

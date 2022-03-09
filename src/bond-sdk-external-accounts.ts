@@ -20,7 +20,7 @@ interface Payload {
     bank_name: string;
 }
 
-type PlaidInsitution = {
+type PlaidInstitution = {
     name: string;
     institution_id: string;
 };
@@ -44,7 +44,7 @@ type PlaidError = {
 type PlaidSuccessResponse = {
     public_token: string;
     metadata: {
-        institution: PlaidInsitution;
+        institution: PlaidInstitution;
         account_id: string;
         account: PlaidAccount;
         link_session_id: string;
@@ -56,7 +56,7 @@ type PlaidExitResponse = {
     // https://plaid.com/docs/link/web/#onexit
     error: PlaidError;
     metadata: {
-        institution: PlaidInsitution;
+        institution: PlaidInstitution;
         status: string;
         link_session_id: string;
         request_id: string;

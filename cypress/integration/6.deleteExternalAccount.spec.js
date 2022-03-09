@@ -21,14 +21,10 @@ context('Actions', () => {
     }).as('apiExchangingTokens');
 
     cy.intercept({
-      method: 'PATCH',
-      url: `${Cypress.env('serverEndpoint')}/${Cypress.env('accountId')}`,
-    }).as('apiLinkExternalAccountToCardAccount')
-
-    cy.intercept({
       method: 'DELETE',
       url: `${Cypress.env('serverEndpoint')}/*`,
     }).as('apiDeleteExternalAccountToCardAccount')
+
   });
 
   it('Link external account successfully', () => {
@@ -97,30 +93,20 @@ context('Actions', () => {
 
           cy.wait(2000);
 
-          cy.wait('@apiLinkExternalAccountToCardAccount').then((interception) => {
-            const body = interception.response.body;
-
-            expect(body.status).to.eq('Active');
-            expect(body.account_id).not.null;
-          })
-
-          cy.wait(2000);
-
           cy.window().then(win=> {
             const payload = win.sessionStorage.getItem('CONNECT_ACCOUNT_SUCCESS');
             const parsed = JSON.parse(payload);
-            const {external_accounts} = parsed
 
-            externalAccountId = external_accounts[external_accounts.length - 1].account_id
-
-            expect(parsed).to.have.property('account_id');
-            expect(parsed).to.have.property('card_id');
             expect(parsed).to.have.property('status');
-            expect(parsed).to.have.property('external_accounts');
+            expect(parsed.linked).to.eq('linked');
+            expect(parsed).to.have.property('linkedAccount');
+            expect(parsed.linkedAccount).not.null;
           });
+
         })
       })
     })
+
   });
 
   it('Delete external account successfully', () => {
@@ -210,18 +196,22 @@ context('Actions', () => {
 
           cy.wait(2000);
 
-          cy.wait('@apiLinkExternalAccountToCardAccount').then((interception) => {
-            const { status, account_id, external_accounts} = interception.response.body;
+          cy.window().then(win=> {
+            const payload = win.sessionStorage.getItem('DELETE_ACCOUNT_SUCCESS');
+            const parsed = JSON.parse(payload);
 
-            const account = external_accounts.find(({ account_id }) => account_id === externalAccountId);
+            expect(parsed).to.have.property('status');
+            expect(parsed.linked).to.eq('deleted');
+            expect(parsed).to.have.property('linkedAccount');
+            expect(parsed.linkedAccount).not.null;
+            expect(parsed).to.have.property('externalAccounts');
+            expect(parsed.externalAccounts).to.be.null;
 
-            expect(status).to.eq('Active');
-            expect(account_id).not.null;
-            expect(account.status).to.eq('removed');
-          })
+          });
+
         })
       })
     })
   });
-});
 
+});

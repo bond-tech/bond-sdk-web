@@ -72,8 +72,7 @@ type PlaidExitResponse = {
 }
 
 interface BondLinkResponse {
-    linked: boolean;
-    error?: string;
+    status: string; // interrupted, linked, updated, deleted
     linkedAccount?: object;
     linkedAccountId?: string;
     externalAccounts?: object[];
@@ -112,7 +111,7 @@ class BondExternalAccounts {
         // can be sandbox.dev, api.dev, sandbox(prod), api(prod), api.staging, sandbox.staging.
         this.bondEnv = bondEnv;
         // can be production, sandbox
-        this.plaidEnv = bondEnv === 'api' || bondEnv === 'api.staging' || bondEnv === 'api.dev' ? 'production' : 'sandbox';
+        this.plaidEnv = (bondEnv === 'api' || bondEnv === 'api.staging' || bondEnv === 'api.dev') ? 'production' : 'sandbox';
         this.bondHost = `https://${this.bondEnv}.bond.tech`;
     }
 
@@ -124,14 +123,21 @@ class BondExternalAccounts {
      * @param {String} identity Set identity token.
      * @param {String} authorization Set authorization token.
      */
-    async linkAccount({ customerId: customer_id, businessId: business_id, accountId: card_account_id, identity, authorization }: LinkAccountParams): Promise<BondLinkResponse> {
+    async linkAccount(
+        { 
+            customerId: customer_id, 
+            businessId: business_id, 
+            accountId: card_account_id, 
+            identity, authorization 
+        }: LinkAccountParams
+    ): Promise<BondLinkResponse> {
         const credentials: Credentials = {
             identity,
             authorization,
         }
 
         // `account_id` is used as `linked_account_id` for micro deposit flow
-        const { account_id, link_token } = await this._createExternalAccount(customer_id ? { customer_id }: { business_id }, credentials);
+        const { linked_account_id, link_token } = await this._createExternalAccount(customer_id ? { customer_id }: { business_id }, credentials);
 
         const response = await this._initializePlaidLink(link_token);
 
@@ -147,30 +153,25 @@ class BondExternalAccounts {
                 bank_name: metadata.institution.name,
             }
 
-            await this._exchangingTokens(account_id, payload, credentials);
-            //return successResponse
-            // TODO: return all external accounts
+            await this._exchangingTokens(linked_account_id, payload, credentials);
+
             const external_accounts = await this._getExternalAccounts(customer_id ? customer_id: business_id, credentials);
-            const linked_account = external_accounts.filter(account => account.linked_account_id == account_id);
-            if(linked_account.length == 0) {
-                return {
-                    error: "could not find account just linked in entity's external accounts", 
-                    linked: true,
-                    linkedAccountId: account_id,
+            const linked_account = external_accounts.filter(account => account.linked_account_id == linked_account_id);
+            return (linked_account.length == 0) ? {
+                    status: "linked",
+                    linkedAccount: null,
+                    linkedAccountId: linked_account_id,
+                    externalAccounts: external_accounts,
+                } : {
+                    status: "linked",
+                    linkedAccount: linked_account[0],
+                    linkedAccountId: linked_account_id,
                     externalAccounts: external_accounts,
                 };
-            } else {
-                return {
-                    error: null, 
-                    linked: true,
-                    linkedAccount: linked_account[0],
-                };
-            }
         } else {
             // TODO: await this._deleteExternalAccount(account_id, credentials);
             return {
-                linked: false,
-                error: "client exited plaid before linking", 
+                status: "interrupted",
                 plaidResponse: (response as PlaidExitResponse),
             }
         }
@@ -187,7 +188,7 @@ class BondExternalAccounts {
        linkedAccountId: linked_account_id,
        identity,
        authorization
-    }: MicroDepositParams) {
+    }: MicroDepositParams): Promise<BondLinkResponse> {
         const credentials: Credentials = {
             identity,
             authorization,
@@ -206,9 +207,37 @@ class BondExternalAccounts {
                 verification_status: metadata.account.verification_status,
             }, credentials);
         } else {
-            return (response as PlaidExitResponse);
+            return {
+                status: "interrupted",
+                plaidResponse: (response as PlaidExitResponse),
+            }
         }
 
+    }
+
+    /**
+     * Delete external account
+     * @param {String} accountId Linked account id to delete
+     * @param {String} identity Set identity token.
+     * @param {String} authorization Set authorization token.
+     */
+    async deleteExternalAccount({
+        accountId: account_id,
+        identity,
+        authorization
+    }){
+        const credentials: Credentials = {
+            identity,
+            authorization,
+        }
+
+        const account = await this._deleteExternalAccount(account_id, credentials);
+        return {
+            status: "deleted",
+            linkedAccount: account,
+            linkedAccountId: account_id,
+            externalAccounts: null,
+        };
     }
 
     _appendPlaidLinkInitializeScript() {
@@ -321,19 +350,6 @@ class BondExternalAccounts {
         });
 
         return await res.json();
-    }
-
-    async deleteExternalAccount({
-        accountId: account_id,
-        identity,
-        authorization
-    }){
-        const credentials: Credentials = {
-            identity,
-            authorization,
-        }
-
-        return await this._deleteExternalAccount(account_id, credentials);
     }
 }
 

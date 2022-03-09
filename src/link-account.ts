@@ -21,10 +21,10 @@ function handleClick() {
   })
     .then(response => {
       console.log(response);
-      if( response.linked ) {
+      if( response.status == "linked" ) {
         console.log("success");
         sessionStorage.setItem('CONNECT_ACCOUNT_SUCCESS', JSON.stringify(response));
-      } else {
+      } else if( response.status == "interrupted" ) {
         console.log("early exit");
         sessionStorage.setItem('CONNECT_ACCOUNT_EXIT', JSON.stringify(response));
       }

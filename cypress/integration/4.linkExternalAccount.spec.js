@@ -90,11 +90,12 @@ context('Actions', () => {
             const payload = win.sessionStorage.getItem('CONNECT_ACCOUNT_SUCCESS');
             const parsed = JSON.parse(payload);
 
-            expect(parsed).to.have.property('linked');
-            expect(parsed.linked).to.be.true
-            expect(parsed.error).to.be.null
+            expect(parsed).to.have.property('status');
+            expect(parsed.linked).to.eq('linked');
             expect(parsed).to.have.property('linkedAccount');
+            expect(parsed.linkedAccount).not.null;
           });
+          
         })
       })
     })

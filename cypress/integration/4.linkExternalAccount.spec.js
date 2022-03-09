@@ -87,6 +87,8 @@ context('Actions', () => {
           cy.wait(3000);
 
           cy.window().then(win=> {
+            expect(win.sessionStorage).to.have.property('CONNECT_ACCOUNT_SUCCESS');
+
             const payload = win.sessionStorage.getItem('CONNECT_ACCOUNT_SUCCESS');
             const parsed = JSON.parse(payload);
 
@@ -94,6 +96,8 @@ context('Actions', () => {
             expect(parsed.status).to.eq('linked');
             expect(parsed).to.have.property('linkedAccount');
             expect(parsed.linkedAccount).not.null;
+            expect(parsed).to.have.property('linkedAccountId');
+            expect(parsed.linkedAccountId).not.null;
           });
           
         })

@@ -92,7 +92,7 @@ context('Actions', () => {
 
             expect(parsed).to.have.property('linked');
             expect(parsed.linked).to.be.true
-            expect(parsed.linked).to.be.null
+            expect(parsed.error).to.be.null
             expect(parsed).to.have.property('linkedAccount');
           });
         })

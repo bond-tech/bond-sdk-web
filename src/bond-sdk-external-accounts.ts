@@ -137,7 +137,7 @@ class BondExternalAccounts {
         }
 
         // `account_id` is used as `linked_account_id` for micro deposit flow
-        const { linked_account_id, link_token } = await this._createExternalAccount(customer_id ? { customer_id }: { business_id }, credentials);
+        const { account_id, link_token } = await this._createExternalAccount(customer_id ? { customer_id }: { business_id }, credentials);
 
         const response = await this._initializePlaidLink(link_token);
 
@@ -153,19 +153,19 @@ class BondExternalAccounts {
                 bank_name: metadata.institution.name,
             }
 
-            await this._exchangingTokens(linked_account_id, payload, credentials);
+            await this._exchangingTokens(account_id, payload, credentials);
 
             const external_accounts = await this._getExternalAccounts(customer_id ? customer_id: business_id, credentials);
-            const linked_account = external_accounts.filter(account => account.linked_account_id == linked_account_id);
+            const linked_account = external_accounts.filter(account => account.linked_account_id == account_id);
             return (linked_account.length == 0) ? {
                     status: "linked",
                     linkedAccount: null,
-                    linkedAccountId: linked_account_id,
+                    linkedAccountId: account_id,
                     externalAccounts: external_accounts,
                 } : {
                     status: "linked",
                     linkedAccount: linked_account[0],
-                    linkedAccountId: linked_account_id,
+                    linkedAccountId: account_id,
                     externalAccounts: external_accounts,
                 };
         } else {
@@ -274,7 +274,6 @@ class BondExternalAccounts {
     };
 
     async _exchangingTokens(account_id: string, payload: Payload, { identity, authorization }: Credentials) {
-        console.log(`starting token exchange for ${account_id}`);
         const res = await fetch(`${this.bondHost}/api/v0/accounts/${account_id}`, {
             method: 'POST',
             headers: {

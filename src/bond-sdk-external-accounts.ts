@@ -58,14 +58,6 @@ type PlaidExitResponse = {
     metadata: {
         institution: PlaidInsitution;
         status: string;
-        // values: 
-        //  requires_questions
-        //  requires_selections
-        //  requires_code
-        //  choose_device
-        //  requires_credentials
-        //  requires_oauth
-        //  institution_not_found
         link_session_id: string;
         request_id: string;
     };
@@ -198,9 +190,6 @@ class BondExternalAccounts {
                     env: this.plaidEnv,
                     token: link_token,
                     onSuccess: (public_token, metadata) => {
-                        console.log('_initializePlaidLink')
-                        console.log('public_token', public_token)
-                        console.log('metadata', metadata)
                         resolve({ public_token, metadata } as PlaidSuccessResponse)
                     },
                     onLoad: () => {
@@ -221,7 +210,6 @@ class BondExternalAccounts {
     };
 
     async  _exchangingTokens(account_id: string, payload: Payload, { identity, authorization }: Credentials) {
-        console.log(`starting token exchange for ${account_id}`);
         const res = await fetch(`${this.bondHost}/api/v0/accounts/${account_id}`, {
             method: 'POST',
             headers: {
@@ -232,8 +220,7 @@ class BondExternalAccounts {
             body: JSON.stringify(payload),
         });
         const data = await res.json();
-        console.log(`result: ${res.status}, ${data}`);
-        return data; // await res.json();
+        return data;
     };
 
     async _linkExternalAccountToCardAccount(card_account_id: string, external_account_id: string, { identity, authorization }: Credentials) {

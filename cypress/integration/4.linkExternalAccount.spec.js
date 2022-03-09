@@ -19,10 +19,6 @@ context('Actions', () => {
       url: `${Cypress.env('serverEndpoint')}/*`,
     }).as('apiExchangingTokens')
 
-    cy.intercept({
-      method: 'PATCH',
-      url: `${Cypress.env('serverEndpoint')}/${Cypress.env('accountId')}`,
-    }).as('apiLinkExternalAccountToCardAccount')
   });
 
   it('Link external account successfully', () => {
@@ -90,99 +86,15 @@ context('Actions', () => {
 
           cy.wait(2000);
 
-          cy.wait('@apiLinkExternalAccountToCardAccount').then((interception) => {
-            const body = interception.response.body;
-
-            expect(body.status).to.eq('Active');
-            expect(body.account_id).not.null;
-          })
-
           cy.window().then(win=> {
             const payload = win.sessionStorage.getItem('CONNECT_ACCOUNT_SUCCESS');
             const parsed = JSON.parse(payload);
 
-            expect(parsed).to.have.property('account_id');
-            expect(parsed).to.have.property('card_id');
-            expect(parsed).to.have.property('status');
-            expect(parsed).to.have.property('external_accounts');
+            expect(parsed).to.have.property('linked');
+            expect(parsed.linked).to.be.true
+            expect(parsed.linked).to.be.null
+            expect(parsed).to.have.property('linkedAccount');
           });
-        })
-      })
-    })
-  });
-
-  it('Link external account immediate exit', () => {
-
-    // custom command in the /cypress/support/commands.js file
-    cy.fillAndSubmit()
-
-    cy.wait('@apiCreateExternalAccount').then(interception => {
-      const { body } = interception.response;
-
-      expect(body.account_id).not.null;
-      expect(body.link_token).not.null;
-      expect(body.link_type).eq('plaid');
-      expect(body.type).eq('external');
-
-      cy.wait('@apiPlaidHeartbeat').then(() => {
-
-        cy.get('#plaid-link-iframe-1').then($iframe => {
-          const $body = $iframe.contents().find('body');
-
-          cy.wrap($body)
-            .find('.Navbar').find('button').first().click();
-
-          cy.window().then(win=> {
-            const payload = win.sessionStorage.getItem('CONNECT_ACCOUNT_EXIT');
-            const parsed = JSON.parse(payload);
-
-            expect(parsed).to.have.property('error');
-            expect(parsed).to.have.property('metadata');
-            // expect(parsed).to.have.property('status');
-            // expect(parsed).to.have.property('external_accounts');
-          });
-
-        })
-      })
-    })
-  });
-
-
-  it('Link external account premature exit', () => {
-
-    // custom command in the /cypress/support/commands.js file
-    cy.fillAndSubmit()
-
-    cy.wait('@apiCreateExternalAccount').then(interception => {
-      const { body } = interception.response;
-
-      expect(body.account_id).not.null;
-      expect(body.link_token).not.null;
-      expect(body.link_type).eq('plaid');
-      expect(body.type).eq('external');
-
-      cy.wait('@apiPlaidHeartbeat').then(() => {
-
-        cy.get('#plaid-link-iframe-1').then($iframe => {
-          const $body = $iframe.contents().find('body');
-
-          cy.wrap($body)
-            .find('#aut-continue-button')
-            .click();
-
-          cy.wrap($body)
-            .find('.Navbar').find('button').first().click();
-
-          cy.window().then(win=> {
-            const payload = win.sessionStorage.getItem('CONNECT_ACCOUNT_EXIT');
-            const parsed = JSON.parse(payload);
-
-            expect(parsed).to.have.property('error');
-            expect(parsed).to.have.property('metadata');
-            // expect(parsed).to.have.property('status');
-            // expect(parsed).to.have.property('external_accounts');
-          });
-
         })
       })
     })

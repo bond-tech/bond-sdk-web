@@ -71,6 +71,15 @@ type PlaidExitResponse = {
     };
 }
 
+interface BondLinkResponse {
+    linked: boolean;
+    error?: string;
+    linkedAccount?: object;
+    linkedAccountId?: string;
+    externalAccounts?: object[];
+    plaidResponse?: PlaidExitResponse;
+}
+
 interface UpdateExternalAccountPayload {
     new_link_token: boolean;
     verification_status?: string;
@@ -115,7 +124,7 @@ class BondExternalAccounts {
      * @param {String} identity Set identity token.
      * @param {String} authorization Set authorization token.
      */
-    async linkAccount({ customerId: customer_id, businessId: business_id, accountId: card_account_id, identity, authorization }: LinkAccountParams) {
+    async linkAccount({ customerId: customer_id, businessId: business_id, accountId: card_account_id, identity, authorization }: LinkAccountParams): Promise<BondLinkResponse> {
         const credentials: Credentials = {
             identity,
             authorization,
@@ -131,7 +140,6 @@ class BondExternalAccounts {
             const public_token = successResponse.public_token;
             const metadata = successResponse.metadata;
             const external_account_id = metadata.account_id;
-
             const payload = {
                 public_token,
                 external_account_id,
@@ -140,13 +148,31 @@ class BondExternalAccounts {
             }
 
             await this._exchangingTokens(account_id, payload, credentials);
-            return
+            //return successResponse
             // TODO: return all external accounts
-            // return await this._getExternalAccounts(customer_id ? customer_id: business_id, credentials);
-
+            const external_accounts = await this._getExternalAccounts(customer_id ? customer_id: business_id, credentials);
+            const linked_account = external_accounts.filter(account => account.linked_account_id == account_id);
+            if(linked_account.length == 0) {
+                return {
+                    error: "could not find account just linked in entity's external accounts", 
+                    linked: true,
+                    linkedAccountId: account_id,
+                    externalAccounts: external_accounts,
+                };
+            } else {
+                return {
+                    error: null, 
+                    linked: true,
+                    linkedAccount: linked_account[0],
+                };
+            }
         } else {
             // TODO: await this._deleteExternalAccount(account_id, credentials);
-            return (response as PlaidExitResponse);
+            return {
+                linked: false,
+                error: "client exited plaid before linking", 
+                plaidResponse: (response as PlaidExitResponse),
+            }
         }
 
     }

@@ -12,20 +12,21 @@ function handleClick() {
   const identity = (<HTMLInputElement>document.getElementById('identity')).value;
   const authorization = (<HTMLInputElement>document.getElementById('authorization')).value;
 
+  sessionStorage.setItem('CONNECT_ACCOUNT_SUCCESS', false.toString());
   bondExternalAccounts.linkAccount({
     customerId,
     accountId,
     identity,
     authorization,
   })
-    .then(data => {
-      console.log(data);
-      if( data.public_token ) {
+    .then(response => {
+      console.log(response);
+      if( response.linked ) {
         console.log("success");
-        sessionStorage.setItem('CONNECT_ACCOUNT_SUCCESS', JSON.stringify(data));
+        sessionStorage.setItem('CONNECT_ACCOUNT_SUCCESS', JSON.stringify(response));
       } else {
         console.log("early exit");
-        sessionStorage.setItem('CONNECT_ACCOUNT_EXIT', JSON.stringify(data));
+        sessionStorage.setItem('CONNECT_ACCOUNT_EXIT', JSON.stringify(response));
       }
     })
     .catch(error => {

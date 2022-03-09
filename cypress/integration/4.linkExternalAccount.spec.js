@@ -91,7 +91,7 @@ context('Actions', () => {
             const parsed = JSON.parse(payload);
 
             expect(parsed).to.have.property('status');
-            expect(parsed.linked).to.eq('linked');
+            expect(parsed.status).to.eq('linked');
             expect(parsed).to.have.property('linkedAccount');
             expect(parsed.linkedAccount).not.null;
           });

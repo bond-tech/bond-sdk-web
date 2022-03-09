@@ -147,7 +147,7 @@ context('Actions', () => {
     })
   });
 
-
+  /*
   it('Link external account premature exit', () => {
 
     // custom command in the /cypress/support/commands.js file
@@ -187,6 +187,7 @@ context('Actions', () => {
       })
     })
   });
+  */
 
 });
 

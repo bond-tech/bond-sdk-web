@@ -20,10 +20,15 @@ function handleClick() {
   })
     .then(data => {
       console.log(data);
-      sessionStorage.setItem('CONNECT_ACCOUNT_SUCCESS', JSON.stringify(data))
+      if( data.account_id ) {
+        sessionStorage.setItem('CONNECT_ACCOUNT_SUCCESS', JSON.stringify(data));
+      } else {
+        console.log("early exit");
+        sessionStorage.setItem('CONNECT_ACCOUNT_EXIT', JSON.stringify(data));
+      }
     })
     .catch(error => {
       console.error(error);
-      sessionStorage.setItem('CONNECT_ACCOUNT_ERROR', JSON.stringify(error))
+      sessionStorage.setItem('CONNECT_ACCOUNT_ERROR', JSON.stringify(error));
     });
 }

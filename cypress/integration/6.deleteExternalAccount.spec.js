@@ -4,6 +4,7 @@ let externalAccountId;
 
 context('Actions', () => {
   beforeEach(() => {
+
     cy.intercept({
       method: 'POST',
       url: `${Cypress.env('serverEndpoint')}`,
@@ -17,7 +18,7 @@ context('Actions', () => {
     cy.intercept({
       method: 'POST',
       url: `${Cypress.env('serverEndpoint')}/*`,
-    }).as('apiExchangingTokens')
+    }).as('apiExchangingTokens');
 
     cy.intercept({
       method: 'PATCH',

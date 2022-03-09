@@ -11,8 +11,7 @@ function handleClick() {
   const accountId = (<HTMLInputElement>document.getElementById('accountId')).value;
   const identity = (<HTMLInputElement>document.getElementById('identity')).value;
   const authorization = (<HTMLInputElement>document.getElementById('authorization')).value;
-
-  sessionStorage.setItem('CONNECT_ACCOUNT_SUCCESS', false.toString());
+  
   bondExternalAccounts.linkAccount({
     customerId,
     accountId,

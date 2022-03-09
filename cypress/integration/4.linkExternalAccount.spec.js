@@ -82,9 +82,9 @@ context('Actions', () => {
             expect(body.status).to.eq('active');
             expect(body.verification_status).to.eq('instantly_verified');
             expect(body.access_token).not.null;
-          })
+          });
 
-          cy.wait(2000);
+          cy.wait(3000);
 
           cy.window().then(win=> {
             const payload = win.sessionStorage.getItem('CONNECT_ACCOUNT_SUCCESS');

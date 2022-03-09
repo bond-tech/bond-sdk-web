@@ -201,7 +201,7 @@ context('Actions', () => {
             const parsed = JSON.parse(payload);
 
             expect(parsed).to.have.property('status');
-            expect(parsed.linked).to.eq('deleted');
+            expect(parsed.status).to.eq('deleted');
             expect(parsed).to.have.property('linkedAccount');
             expect(parsed.linkedAccount).not.null;
             expect(parsed).to.have.property('externalAccounts');

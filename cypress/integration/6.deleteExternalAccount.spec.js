@@ -101,6 +101,11 @@ context('Actions', () => {
             expect(parsed.status).to.eq('linked');
             expect(parsed).to.have.property('linkedAccount');
             expect(parsed.linkedAccount).not.null;
+            expect(parsed).to.have.property('linkedAccountId');
+            expect(parsed.linkedAccountId).not.null;
+
+            externalAccountId = parsed.linkedAccountId;
+
           });
 
         })

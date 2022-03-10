@@ -63,11 +63,25 @@ type PlaidExitResponse = {
     };
 }
 
+type BondLinkedAccount = {
+    linked_account_id?: string;
+    status?: string;
+    account_category?: string;
+    account_type?: string;
+    bank_name?: string;
+    card_id?: string;
+    customer_id?: string;
+    verification_status?: string;
+    plaid_access_token?: string;
+    date_created?: string;
+    date_updated?: string;
+}
+
 interface BondLinkResponse {
-    status: string; // interrupted, linked, updated, deleted
-    linkedAccount?: object;
+    status: "interrupted" | "linked" | "updated" | "deleted"
+    linkedAccount?: BondLinkedAccount;
     linkedAccountId?: string;
-    externalAccounts?: object[];
+    externalAccounts?: BondLinkedAccount[];
     plaidResponse?: PlaidExitResponse;
 }
 

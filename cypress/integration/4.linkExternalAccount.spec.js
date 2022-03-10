@@ -84,13 +84,13 @@ context('Actions', () => {
             expect(body.access_token).not.null;
           });
 
-          cy.wait(5000);
+          cy.wait(10000);
 
           cy.window().then(win=> {
             const payload = win.sessionStorage.getItem('CONNECT_ACCOUNT_SUCCESS');
             expect(payload).not.null;
-            const parsed = JSON.parse(payload);
 
+            const parsed = JSON.parse(payload);
             expect(parsed).to.have.property('status');
             expect(parsed.status).to.eq('linked');
             expect(parsed).to.have.property('linkedAccount');

@@ -23,7 +23,7 @@ context('Actions', () => {
     cy.intercept({
       method: 'DELETE',
       url: `${Cypress.env('serverEndpoint')}/*`,
-    }).as('apiDeleteExternalAccountToCardAccount')
+    }).as('apiDeleteExternalAccount')
 
   });
 
@@ -121,7 +121,7 @@ context('Actions', () => {
     // custom command in the /cypress/support/commands.js file
     cy.fillAndSubmit(externalAccountId)
 
-    cy.wait('@apiDeleteExternalAccountToCardAccount').then((interception) => {
+    cy.wait('@apiDeleteExternalAccount').then((interception) => {
       const body = interception.response.body;
 
       expect(body.account_id).eq(externalAccountId);

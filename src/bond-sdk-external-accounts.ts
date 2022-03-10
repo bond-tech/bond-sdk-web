@@ -6,7 +6,7 @@ interface Credentials {
 interface LinkAccountParams extends Credentials {
     businessId?: string;
     customerId?: string;
-    accountId: string;
+    // accountId: string;
 }
 
 interface MicroDepositParams extends Credentials {
@@ -133,7 +133,7 @@ class BondExternalAccounts {
         { 
             customerId: customer_id, 
             businessId: business_id, 
-            accountId: card_account_id, 
+            // accountId: card_account_id, 
             identity, authorization 
         }: LinkAccountParams
     ): Promise<BondLinkResponse> {

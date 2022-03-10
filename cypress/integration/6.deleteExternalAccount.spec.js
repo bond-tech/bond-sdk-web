@@ -95,6 +95,7 @@ context('Actions', () => {
 
           cy.window().then(win=> {
             const payload = win.sessionStorage.getItem('CONNECT_ACCOUNT_SUCCESS');
+            expect(payload).not.null;
             const parsed = JSON.parse(payload);
 
             expect(parsed).to.have.property('status');
@@ -203,6 +204,7 @@ context('Actions', () => {
 
           cy.window().then(win=> {
             const payload = win.sessionStorage.getItem('DELETE_ACCOUNT_SUCCESS');
+            expect(payload).not.null;
             const parsed = JSON.parse(payload);
 
             expect(parsed).to.have.property('status');

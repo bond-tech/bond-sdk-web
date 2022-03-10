@@ -136,6 +136,11 @@ context('Actions', () => {
     })
   });
 
+  /*
+
+  So I am not sure we can use this flow now; if we don't associate with 
+  a card account, then we just create another linked account here. 
+
   it('Check deleted external account status', () => {
     cy.visitPage('link-account')
 
@@ -202,25 +207,20 @@ context('Actions', () => {
 
           cy.wait(2000);
 
-          /*
-          cy.window().then(win=> {
-            const payload = win.sessionStorage.getItem('DELETE_ACCOUNT_SUCCESS');
-            expect(payload).not.null;
-            const parsed = JSON.parse(payload);
+          cy.wait('@apiLinkExternalAccountToCardAccount').then((interception) => {
+            const { status, account_id, external_accounts} = interception.response.body;
 
-            expect(parsed).to.have.property('status');
-            expect(parsed.status).to.eq('deleted');
-            expect(parsed).to.have.property('linkedAccount');
-            expect(parsed.linkedAccount).not.null;
-            expect(parsed).to.have.property('externalAccounts');
-            expect(parsed.externalAccounts).to.be.null;
+            const account = external_accounts.find(({ account_id }) => account_id === externalAccountId);
 
+            expect(status).to.eq('Active');
+            expect(account_id).not.null;
+            expect(account.status).to.eq('removed');
           });
-          */
 
         })
       })
     })
   });
+  */
 
 });

@@ -20,7 +20,7 @@ interface Payload {
     bank_name: string;
 }
 
-type PlaidInsitution = {
+type PlaidInstitution = {
     name: string;
     institution_id: string;
 };
@@ -44,7 +44,7 @@ type PlaidError = {
 type PlaidSuccessResponse = {
     public_token: string;
     metadata: {
-        institution: PlaidInsitution;
+        institution: PlaidInstitution;
         account_id: string;
         account: PlaidAccount;
         link_session_id: string;
@@ -56,16 +56,8 @@ type PlaidExitResponse = {
     // https://plaid.com/docs/link/web/#onexit
     error: PlaidError;
     metadata: {
-        institution: PlaidInsitution;
+        institution: PlaidInstitution;
         status: string;
-        // values: 
-        //  requires_questions
-        //  requires_selections
-        //  requires_code
-        //  choose_device
-        //  requires_credentials
-        //  requires_oauth
-        //  institution_not_found
         link_session_id: string;
         request_id: string;
     };
@@ -254,7 +246,7 @@ class BondExternalAccounts {
                     env: this.plaidEnv,
                     token: link_token,
                     onSuccess: (public_token, metadata) => {
-                        resolve({ public_token, metadata });
+                        resolve({ public_token, metadata } as PlaidSuccessResponse)
                     },
                     onLoad: () => {
                         handler.open();

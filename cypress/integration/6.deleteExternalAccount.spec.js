@@ -31,7 +31,7 @@ context('Actions', () => {
     cy.visitPage('link-account')
 
     // custom command in the /cypress/support/commands.js file
-    cy.fillAndSubmit()
+    cy.fillAndSubmitLink()
 
     cy.wait('@apiCreateExternalAccount').then(interception => {
       const { body } = interception.response;
@@ -119,7 +119,7 @@ context('Actions', () => {
     cy.visitPage('delete-account')
 
     // custom command in the /cypress/support/commands.js file
-    cy.fillAndSubmit(externalAccountId)
+    cy.fillAndSubmitDelete(externalAccountId)
 
     cy.wait('@apiDeleteExternalAccount').then((interception) => {
       const body = interception.response.body;

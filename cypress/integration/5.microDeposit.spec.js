@@ -73,7 +73,7 @@ function getLinkedAccountId(cy, cb) {
 
   cy.visitPage('link-account');
 
-  cy.fillAndSubmit();
+  cy.fillAndSubmitLink();
 
   cy.wait(4000);
 

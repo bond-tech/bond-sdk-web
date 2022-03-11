@@ -24,7 +24,7 @@ context('Actions', () => {
   it('Link external account successfully', () => {
 
     // custom command in the /cypress/support/commands.js file
-    cy.fillAndSubmit()
+    cy.fillAndSubmitLink()
 
     cy.wait('@apiCreateExternalAccount').then(interception => {
       const { body } = interception.response;

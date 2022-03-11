@@ -121,23 +121,20 @@ Cypress.Commands.add('verifyReavealedInfo', (card_num, card_exp, card_cvv) => {
 });
 
 // -- This is a parent command --
-Cypress.Commands.add('fillAndSubmit', (accountId) => {
-    //if(!accountId){
+Cypress.Commands.add('fillAndSubmitLink', () => {
     cy.get('#customerId').clear().type(Cypress.env('customerId'));
-    //}
-
     cy.get('#identity').clear().type(Cypress.env('identityForExternalAccountsSDK'));
-
     cy.get('#authorization').clear().type(Cypress.env('authorizationForExternalAccountsSDK'));
+    cy.get('#btn').click();
+})
 
-    if(accountId){
-      cy.get('#accountId').clear().type(accountId || Cypress.env('accountId'));
-    }
-
+Cypress.Commands.add('fillAndSubmitDelete', (accountId) => {
+    cy.get('#accountId').clear().type(accountId || Cypress.env('accountId'));
+    cy.get('#identity').clear().type(Cypress.env('identityForExternalAccountsSDK'));
+    cy.get('#authorization').clear().type(Cypress.env('authorizationForExternalAccountsSDK'));
     if(Cypress.env('linkedAccountId')) {
       cy.get('#linkedAccountId').clear().type(Cypress.env('linkedAccountId'));
     }
-
     cy.get('#btn').click();
 })
 

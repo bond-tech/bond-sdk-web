@@ -63,7 +63,7 @@ context('Actions', () => {
             .find('.PaneContent .ListItem input').first().click();
 
           cy.wait(1000);
-
+          
           // submit checkbox
           cy.wrap($body)
             .find('#aut-continue-button')

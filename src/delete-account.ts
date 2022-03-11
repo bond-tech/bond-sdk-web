@@ -18,7 +18,7 @@ function handleClick() {
   })
     .then(response => {
       console.log(response);
-      if( response.status == "deleted" ) {
+      if(response.status == "deleted") {
         sessionStorage.setItem('DELETE_ACCOUNT_SUCCESS', JSON.stringify(response))
       }
     })

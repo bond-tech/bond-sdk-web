@@ -173,7 +173,6 @@ class BondExternalAccounts {
             };
         } else {
             // TODO: await this._deleteExternalAccount(account_id, credentials);
-            console.log(account_id);
             return {
                 status: "interrupted",
                 plaidResponse: (response as PlaidExitResponse),

@@ -138,7 +138,7 @@ class BondExternalAccounts {
             businessId: business_id, 
             identity, authorization 
         }: LinkAccountParams
-    ) { //: Promise<BondLinkResponse> {
+    ) {
         const credentials: Credentials = {
             identity,
             authorization,
@@ -194,7 +194,7 @@ class BondExternalAccounts {
            identity,
            authorization
         }: MicroDepositParams
-    ) { //: Promise<BondLinkResponse>
+    ) {
         const credentials: Credentials = {
             identity,
             authorization,

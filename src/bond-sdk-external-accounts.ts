@@ -164,10 +164,10 @@ class BondExternalAccounts {
             await this._exchangingTokens(account_id, payload, credentials);
 
             const externalAccounts = await this._getExternalAccounts(customer_id ? customer_id: business_id, credentials);
-            const linkedAccount = externalAccounts.filter(account => account.linked_account_id == account_id);
+            const linkedAccount = externalAccounts.find(account => account.linked_account_id == account_id);
             return {
                 status: "linked",
-                linkedAccount: linkedAccount.length === 0 ? null : linkedAccount[0],
+                linkedAccount: linkedAccount ? linkedAccount : null,
                 linkedAccountId: account_id,
                 externalAccounts: externalAccounts,
             };

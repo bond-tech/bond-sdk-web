@@ -21,21 +21,17 @@ context('Actions', () => {
     }).as('apiExchangingTokens');
 
     cy.intercept({
-      method: 'PATCH',
-      url: `${Cypress.env('serverEndpoint')}/${Cypress.env('accountId')}`,
-    }).as('apiLinkExternalAccountToCardAccount')
-
-    cy.intercept({
       method: 'DELETE',
       url: `${Cypress.env('serverEndpoint')}/*`,
-    }).as('apiDeleteExternalAccountToCardAccount')
+    }).as('apiDeleteExternalAccount')
+
   });
 
   it('Link external account successfully', () => {
     cy.visitPage('link-account')
 
     // custom command in the /cypress/support/commands.js file
-    cy.fillAndSubmit()
+    cy.fillAndSubmitLink()
 
     cy.wait('@apiCreateExternalAccount').then(interception => {
       const { body } = interception.response;
@@ -95,41 +91,37 @@ context('Actions', () => {
             expect(body.access_token).not.null;
           })
 
-          cy.wait(2000);
-
-          cy.wait('@apiLinkExternalAccountToCardAccount').then((interception) => {
-            const body = interception.response.body;
-
-            expect(body.status).to.eq('Active');
-            expect(body.account_id).not.null;
-          })
-
-          cy.wait(2000);
+          cy.wait(3000);
 
           cy.window().then(win=> {
             const payload = win.sessionStorage.getItem('CONNECT_ACCOUNT_SUCCESS');
+            expect(payload).not.null;
             const parsed = JSON.parse(payload);
-            const {external_accounts} = parsed
 
-            externalAccountId = external_accounts[external_accounts.length - 1].account_id
-
-            expect(parsed).to.have.property('account_id');
-            expect(parsed).to.have.property('card_id');
             expect(parsed).to.have.property('status');
-            expect(parsed).to.have.property('external_accounts');
+            expect(parsed.status).to.eq('linked');
+            expect(parsed).to.have.property('linkedAccount');
+            expect(parsed.linkedAccount).not.null;
+            expect(parsed).to.have.property('linkedAccountId');
+            expect(parsed.linkedAccountId).not.null;
+
+            externalAccountId = parsed.linkedAccountId;
+
           });
+
         })
       })
     })
+
   });
 
   it('Delete external account successfully', () => {
     cy.visitPage('delete-account')
 
     // custom command in the /cypress/support/commands.js file
-    cy.fillAndSubmit(externalAccountId)
+    cy.fillAndSubmitDelete(externalAccountId)
 
-    cy.wait('@apiDeleteExternalAccountToCardAccount').then((interception) => {
+    cy.wait('@apiDeleteExternalAccount').then((interception) => {
       const body = interception.response.body;
 
       expect(body.account_id).eq(externalAccountId);
@@ -143,6 +135,11 @@ context('Actions', () => {
       expect(body.verification_status).eq('instantly_verified');
     })
   });
+
+  /*
+
+  So I am not sure we can use this flow now; if we don't associate with 
+  a card account, then we just create another linked account here. 
 
   it('Check deleted external account status', () => {
     cy.visitPage('link-account')
@@ -218,10 +215,12 @@ context('Actions', () => {
             expect(status).to.eq('Active');
             expect(account_id).not.null;
             expect(account.status).to.eq('removed');
-          })
+          });
+
         })
       })
     })
   });
-});
+  */
 
+});

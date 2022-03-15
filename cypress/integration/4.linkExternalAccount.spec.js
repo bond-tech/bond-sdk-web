@@ -19,16 +19,12 @@ context('Actions', () => {
       url: `${Cypress.env('serverEndpoint')}/*`,
     }).as('apiExchangingTokens')
 
-    cy.intercept({
-      method: 'PATCH',
-      url: `${Cypress.env('serverEndpoint')}/${Cypress.env('accountId')}`,
-    }).as('apiLinkExternalAccountToCardAccount')
   });
 
   it('Link external account successfully', () => {
 
     // custom command in the /cypress/support/commands.js file
-    cy.fillAndSubmit()
+    cy.fillAndSubmitLink()
 
     cy.wait('@apiCreateExternalAccount').then(interception => {
       const { body } = interception.response;
@@ -67,7 +63,7 @@ context('Actions', () => {
             .find('.PaneContent .ListItem input').first().click();
 
           cy.wait(1000);
-
+          
           // submit checkbox
           cy.wrap($body)
             .find('#aut-continue-button')
@@ -86,26 +82,23 @@ context('Actions', () => {
             expect(body.status).to.eq('active');
             expect(body.verification_status).to.eq('instantly_verified');
             expect(body.access_token).not.null;
-          })
+          });
 
-          cy.wait(2000);
-
-          cy.wait('@apiLinkExternalAccountToCardAccount').then((interception) => {
-            const body = interception.response.body;
-
-            expect(body.status).to.eq('Active');
-            expect(body.account_id).not.null;
-          })
+          cy.wait(10000);
 
           cy.window().then(win=> {
             const payload = win.sessionStorage.getItem('CONNECT_ACCOUNT_SUCCESS');
-            const parsed = JSON.parse(payload);
+            expect(payload).not.null;
 
-            expect(parsed).to.have.property('account_id');
-            expect(parsed).to.have.property('card_id');
+            const parsed = JSON.parse(payload);
             expect(parsed).to.have.property('status');
-            expect(parsed).to.have.property('external_accounts');
+            expect(parsed.status).to.eq('linked');
+            expect(parsed).to.have.property('linkedAccount');
+            expect(parsed.linkedAccount).not.null;
+            expect(parsed).to.have.property('linkedAccountId');
+            expect(parsed.linkedAccountId).not.null;
           });
+          
         })
       })
     })

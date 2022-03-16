@@ -172,7 +172,7 @@ class BondExternalAccounts {
                 externalAccounts: externalAccounts,
             };
         } else {
-            // TODO: await this._deleteExternalAccount(account_id, credentials);
+            await this._deleteExternalAccount(account_id, credentials);
             return {
                 status: "interrupted",
                 plaidResponse: (response as PlaidExitResponse),

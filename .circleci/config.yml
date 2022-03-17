@@ -34,8 +34,7 @@ jobs:
       - save_cache:
           paths: 
             - node_modules
-          key: 
-            - << pipeline.parameters.image-name >>-deps-v<< pipeline.parameters.cache-version >>-{{ checksum "package.json" }}
+          key: << pipeline.parameters.image-name >>-deps-v<< pipeline.parameters.cache-version >>-{{ checksum "package.json" }}
       - run: npm run build
       - persist_to_workspace:
           root: dist

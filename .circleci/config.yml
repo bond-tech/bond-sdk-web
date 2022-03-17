@@ -4,6 +4,16 @@ parameters:
   sdk_image:
     type: string
     default: ${CIRCLE_WORKFLOW_ID}
+  image-name:
+    type: string
+    default: "bond-sdk-web"
+  # CircleCI "recommends" using versioning to invalidate cache
+  # 
+  #   https://support.circleci.com/hc/en-us/articles/115015426888-Clear-project-dependency-cache
+  # 
+  cache-version:
+    type: string
+    default: "0"
 
 #Orb importing
 orbs:
@@ -17,12 +27,19 @@ jobs:
       - image: circleci/node:12
     steps:
       - checkout
+      - restore_cache:
+          keys:
+          - << pipeline.parameters.image-name >>-deps-v<< pipeline.parameters.cache-version >>-{{ checksum "package.json" }}
       - run: npm install
+      - save_cache:
+          paths: 
+            - node_modules
+          key: 
       - run: npm run build
       - persist_to_workspace:
           root: dist
           paths:
-            - ?*
+            - "?*"
 
   publish_local_registry:
     docker:
@@ -121,6 +138,20 @@ jobs:
               aws s3 cp dist/bond-sdk-web.js s3://bond-prod-web-assets/sdk/wev/v/${MAJOR_VERSION}/${MINOR_VERSION}/${PATCH_VERSION}/bond-sdk-web.js
             fi
 
+  publish_to_npm:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - attach_workspace:
+          at: dist
+      - run:
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+      - run:
+          name: Publish package
+          command: npm publish
+
+
 workflows:
 
   version: 2
@@ -138,6 +169,15 @@ workflows:
       - push_to_cdn:
           requires:
             - build
+      - publish_to_npm:
+          context: npm_publish
+          requires:
+            - build
+            - cypress
+          filters:
+            branches:
+              only:
+                - main
 
   daily_integration_verification:
     triggers:
@@ -147,6 +187,7 @@ workflows:
               branches:
                 only:
                   - main
+
     jobs:
       - publish_local_registry
       - cypress:

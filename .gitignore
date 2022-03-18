@@ -23,3 +23,5 @@ scripts/look-for-envvars.sh
 scripts/reset-original-files.sh
 
 .vscode/settings.json
+
+*.secret.*

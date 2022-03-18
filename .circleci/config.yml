@@ -118,8 +118,23 @@ jobs:
             aws s3 cp dist/bond-sdk-web.js s3://bond-prod-web-assets/sdk/web/archive/v${FULL_VERSION}-${CIRCLE_BRANCH}-${CIRCLE_SHA1}.js
             if [[ ${CIRCLE_BRANCH} =~ ^main$ ]] ; then
               aws s3 cp dist/bond-sdk-web.js s3://bond-prod-web-assets/sdk/web/v${MAJOR_VERSION}/bond-sdk-web.js
-              aws s3 cp dist/bond-sdk-web.js s3://bond-prod-web-assets/sdk/wev/v/${MAJOR_VERSION}/${MINOR_VERSION}/${PATCH_VERSION}/bond-sdk-web.js
+              aws s3 cp dist/bond-sdk-web.js s3://bond-prod-web-assets/sdk/web/v/${MAJOR_VERSION}/${MINOR_VERSION}/${PATCH_VERSION}/bond-sdk-web.js
             fi
+
+  publish_to_npm:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - checkout
+      - attach_workspace:
+          at: dist
+      - run:
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+      - run:
+          name: Publish package
+          command: npm publish
+
 
 workflows:
 
@@ -127,14 +142,14 @@ workflows:
 
   pipeline:
     jobs:
-      - build:
-          requires:
-            - cypress
       - publish_local_registry
       - cypress:
           context: bond_cypress_tests
           requires:
             - publish_local_registry
+      - build:
+          requires:
+            - cypress
       - push_to_cdn:
           requires:
             - build

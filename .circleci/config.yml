@@ -86,14 +86,16 @@ jobs:
             SDK_CONTAINER_ID=$(docker ps -aqf "name=bond-sdk-web-client")
             SDK_CONTAINER_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $SDK_CONTAINER_ID)
             export SDK_CONTAINER_IP=${SDK_CONTAINER_IP}
-            export IDENTITY=${CYPRESS_IDENTITY}
-            export AUTHORIZATION=${CYPRESS_AUTHORIZATION}
+            export CYPRESS_IDENTITY=${CYPRESS_IDENTITY}
+            export CYPRESS_AUTHORIZATION=${CYPRESS_AUTHORIZATION}
+            export CYPRESS_CREDIT_CUSTOMER_ID=${CYPRESS_CUSTOMER_ID}
             export CYPRESS_CREDIT_CARD_ID=${CYPRESS_CREDIT_CARD_ID}
             export CYPRESS_CREDIT_CARD_NUMBER=${CYPRESS_CREDIT_CARD_NUMBER}
             export CYPRESS_CREDIT_CARD_EXP=${CYPRESS_CREDIT_CARD_EXP}
             export CYPRESS_CREDIT_CARD_CVV=${CYPRESS_CREDIT_CARD_CVV}
             export CYPRESS_CREDIT_CARD_PIN=${CYPRESS_CREDIT_CARD_PIN}
             export CYPRESS_CREDIT_CARD_NEW_PIN=${CYPRESS_CREDIT_CARD_NEW_PIN}
+            export CYPRESS_DEBIT_CUSTOMER_ID=${CYPRESS_CUSTOMER_ID}
             export CYPRESS_DEBIT_CARD_ID=${CYPRESS_DEBIT_CARD_ID}
             export CYPRESS_DEBIT_CARD_NUMBER=${CYPRESS_DEBIT_CARD_NUMBER}
             export CYPRESS_DEBIT_CARD_EXP=${CYPRESS_DEBIT_CARD_EXP}
@@ -106,7 +108,6 @@ jobs:
             export COMMIT_INFO_AUTHOR=$CIRCLE_USERNAME
             export COMMIT_INFO_SHA=$CIRCLE_SHA1
             export COMMIT_INFO_REMOTE=$CIRCLE_REPOSITORY_URL
-            export CUSTOMER_ID=${CYPRESS_CUSTOMER_ID}
             export ACCOUNT_ID=${CYPRESS_ACCOUNT_ID}
             export IDENTITY_FOR_EXTERNAL_ACCOUNTS_SDK=${CYPRESS_IDENTITY_FOR_EXTERNAL_ACCOUNTS_SDK}
             export AUTHORIZATION_FOR_EXTERNAL_ACCOUNTS_SDK=${CYPRESS_AUTHORIZATION_FOR_EXTERNAL_ACCOUNTS_SDK}
@@ -161,7 +162,7 @@ workflows:
     jobs:
       - publish_local_registry
       - cypress:
-          context: bond_cypress_tests
+          context: bond_web_sdk_cypress
           requires:
             - publish_local_registry
       - build:

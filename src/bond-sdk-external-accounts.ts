@@ -95,33 +95,29 @@ interface UpdateExternalAccountPayload {
 
 /**
  * @classdesc Represents the Bond Account Connection SDK. It allows developers to
- * link external bank accounts with existing one.
+ * link external bank accounts with Bond products. 
  * @class
  */
 class BondExternalAccounts {
-    bondEnv: string;
+
+    isLive: boolean;
     plaidEnv: string;
     bondHost: string;
 
     /**
-     * The BondEnvType
-     * @typedef {('sandbox.dev'|'api.dev'|'sandbox'|'api'|'api.staging'|'sandbox.staging')} BondEnvType
-     */
-
-    /**
      * Create a BondExternalAccounts instance.
      * @constructor
-     * @param {BondEnvType} bondEnv Set bond environment.
-     */
-    constructor({bondEnv = 'api'}: { bondEnv: string }) {
+     * @param {boolean} [live=true] Set to True to work with live data.
+     * False for sandbox data
+    */
+    constructor({ live = false }: { live: boolean }) {
 
         this._appendPlaidLinkInitializeScript();
 
         // can be sandbox.dev, api.dev, sandbox(prod), api(prod), api.staging, sandbox.staging.
-        this.bondEnv = bondEnv;
-        const isProduction = bondEnv === 'api' || bondEnv === 'api.staging' || bondEnv === 'api.dev'
-        this.plaidEnv = isProduction ? 'production' : 'sandbox';
-        this.bondHost = `https://${this.bondEnv}.bond.tech`;
+        this.isLive = live;
+        this.plaidEnv = live ? 'production' : 'sandbox';
+        this.bondHost = `https://${live ? "api" : "sandbox" }.bond.tech`;
     }
 
     /**

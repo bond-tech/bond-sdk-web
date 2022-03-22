@@ -3,11 +3,12 @@
 let externalAccountId;
 
 context('Actions', () => {
+  
   beforeEach(() => {
 
     cy.intercept({
       method: 'POST',
-      url: `${Cypress.env('serverEndpoint')}`,
+      url: `${Cypress.env('SERVER_ENDPOINT')}`,
     }).as('apiCreateExternalAccount')
 
     cy.intercept({
@@ -17,12 +18,12 @@ context('Actions', () => {
 
     cy.intercept({
       method: 'POST',
-      url: `${Cypress.env('serverEndpoint')}/*`,
+      url: `${Cypress.env('SERVER_ENDPOINT')}/*`,
     }).as('apiExchangingTokens');
 
     cy.intercept({
       method: 'DELETE',
-      url: `${Cypress.env('serverEndpoint')}/*`,
+      url: `${Cypress.env('SERVER_ENDPOINT')}/*`,
     }).as('apiDeleteExternalAccount')
 
   });

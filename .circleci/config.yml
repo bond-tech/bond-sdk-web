@@ -7,6 +7,7 @@ parameters:
   image-name:
     type: string
     default: "bond-sdk-web"
+
   # CircleCI "recommends" using versioning to invalidate cache
   # 
   #   https://support.circleci.com/hc/en-us/articles/115015426888-Clear-project-dependency-cache
@@ -22,9 +23,28 @@ orbs:
 
 jobs:
 
+  build-dev:
+    docker:
+      - image: cimg/node:12.22.10
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - << pipeline.parameters.image-name >>-deps-v<< pipeline.parameters.cache-version >>-{{ checksum "package.json" }}
+      - run: npm install
+      - save_cache:
+          paths: 
+            - node_modules
+          key: << pipeline.parameters.image-name >>-deps-v<< pipeline.parameters.cache-version >>-{{ checksum "package.json" }}
+      - run: npm run build:dev
+      - persist_to_workspace:
+          root: dist
+          paths:
+            - "?*"
+
   build:
     docker:
-      - image: circleci/node:12
+      - image: cimg/node:12.22.10
     steps:
       - checkout
       - restore_cache:
@@ -63,7 +83,7 @@ jobs:
 
   cypress:
     docker:
-      - image: cimg/12.22.10
+      - image: cimg/node:12.22.10
     steps:
       - setup_remote_docker
       - checkout
@@ -169,17 +189,21 @@ workflows:
 
   pipeline:
     jobs:
+
       - publish_local_registry
       - cypress:
           context: bond_web_sdk_cypress
           requires:
             - publish_local_registry
+
       - build:
           requires:
             - cypress
+
       - push_to_cdn:
           requires:
             - build
+
       - publish_to_npm:
           context: npm_publish
           requires:

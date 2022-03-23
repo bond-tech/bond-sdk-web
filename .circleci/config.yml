@@ -1,9 +1,12 @@
 version: 2.1
 
 parameters:
-  sdk_image:
+  sdk-image:
     type: string
     default: << pipeline.git.revision >>
+  node-version:
+    type: string
+    default: 16.14.2
   image-name:
     type: string
     default: "bond-sdk-web"
@@ -25,7 +28,7 @@ jobs:
 
   build-dev:
     docker:
-      - image: cimg/node:12.22.10
+      - image: cimg/node:<< pipeline.parameters.node-version >>
     steps:
       - checkout
       - restore_cache:
@@ -44,7 +47,7 @@ jobs:
 
   build:
     docker:
-      - image: cimg/node:12.22.10
+      - image: cimg/node:<< pipeline.parameters.node-version >>
     steps:
       - checkout
       - restore_cache:
@@ -63,7 +66,7 @@ jobs:
 
   publish_local_registry:
     docker:
-      - image: cimg/node:12.22.10
+      - image: cimg/node:<< pipeline.parameters.node-version >>
     steps:
       - setup_remote_docker:
           docker_layer_caching: true
@@ -83,7 +86,7 @@ jobs:
 
   cypress:
     docker:
-      - image: cimg/node:12.22.10
+      - image: cimg/node:<< pipeline.parameters.node-version >>
     steps:
       - setup_remote_docker
       - checkout
@@ -97,7 +100,7 @@ jobs:
           name: Start containers
           command: |
             docker load -i saved_images/docker_image_sdk.tar
-            export SDK_IMAGE=<< pipeline.parameters.sdk_image >>
+            export SDK_IMAGE=<< pipeline.parameters.sdk-image >>
             docker-compose -f docker-compose-test.yaml up -d
             sleep 30
       - run:
@@ -170,7 +173,7 @@ jobs:
 
   publish_to_npm:
     docker:
-      - image: circleci/node:12
+      - image: cimg/node:<< pipeline.parameters.node-version >>
     steps:
       - checkout
       - attach_workspace:

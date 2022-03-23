@@ -113,8 +113,7 @@ class BondExternalAccounts {
     constructor({ live = false }: { live: boolean }) {
 
         this._appendPlaidLinkInitializeScript();
-
-        // can be sandbox.dev, api.dev, sandbox(prod), api(prod), api.staging, sandbox.staging.
+        
         this.isLive = live;
         this.plaidEnv = live ? 'production' : 'sandbox';
         this.bondHost = `https://${live ? "api" : "sandbox" }.bond.tech`;

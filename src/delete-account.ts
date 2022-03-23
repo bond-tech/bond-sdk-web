@@ -1,6 +1,5 @@
 import { BondExternalAccounts } from './bond-sdk-web';
 
-// const bondExternalAccounts = new BondExternalAccounts({ bondEnv: 'sandbox.staging' });
 const bondExternalAccounts = new BondExternalAccounts({ live: false });
 
 const btn = document.getElementById('btn');

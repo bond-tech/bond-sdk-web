@@ -24,12 +24,20 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+const CLIENT_ENDPOINT = Cypress.env('CLIENT_ENDPOINT');
+const STUDIO_HOST = Cypress.env('STUDIO_HOST');
+const IDENTITY = Cypress.env('IDENTITY');
+const AUTHORIZATION = Cypress.env('AUTHORIZATION');
+
+const DEBIT_CUSTOMER_ID = Cypress.env('DEBIT_CUSTOMER_ID');
+const CREDIT_CUSTOMER_ID = Cypress.env('CREDIT_CUSTOMER_ID');
+
 // ***********************************************
 // visit webpage
 // ***********************************************
 
 Cypress.Commands.add('visitPage', (name = 'index') => {
-  cy.visit(`${Cypress.env('CLIENT_ENDPOINT')}/${name}.html`);
+  cy.visit(`${CLIENT_ENDPOINT}/${name}.html`);
 
   cy.window().then((win) => {
     win.sessionStorage.clear();
@@ -44,14 +52,14 @@ Cypress.Commands.add('getTempTokenDebit', () => {
 
   cy.request({
     method: 'POST',
-    url: `https://${Cypress.env('STUDIO_HOST')}/api/v0/auth/key/temporary`,
+    url: `https://${STUDIO_HOST}/api/v0/auth/key/temporary`,
     headers: {
       'Content-Type': 'application/json',
-      Identity: Cypress.env('IDENTITY'),
-      Authorization: Cypress.env('AUTHORIZATION'),
+      Identity: IDENTITY,
+      Authorization: AUTHORIZATION,
     },
     body: {
-      customer_id: Cypress.env('DEBIT_CUSTOMER_ID'),
+      customer_id: DEBIT_CUSTOMER_ID,
     },
     timeout: 120000,
     failOnStatusCode: false,
@@ -89,14 +97,14 @@ Cypress.Commands.add('getTempTokenCredit', () => {
   
   cy.request({
     method: 'POST',
-    url: `https://${Cypress.env('STUDIO_HOST')}/api/v0/auth/key/temporary`,
+    url: `https://${STUDIO_HOST}/api/v0/auth/key/temporary`,
     headers: {
       'Content-Type': 'application/json',
-      Identity: Cypress.env('IDENTITY'),
-      Authorization: Cypress.env('AUTHORIZATION'),
+      Identity: IDENTITY,
+      Authorization: AUTHORIZATION,
     },
     body: {
-      customer_id: Cypress.env('CREDIT_CUSTOMER_ID'),
+      customer_id: CREDIT_CUSTOMER_ID,
     },
     timeout: 120000,
     failOnStatusCode: false,
@@ -172,18 +180,18 @@ Cypress.Commands.add('verifyReavealedInfo', (card_num, card_exp, card_cvv) => {
 
 // -- This is a parent command --
 Cypress.Commands.add('fillAndSubmitLink', () => {
-    cy.get('#customerId').clear().type(Cypress.env('DEBIT_CUSTOMER_ID'));
-    cy.get('#identity').clear().type(Cypress.env('CYPRESS_IDENTITY'));
-    cy.get('#authorization').clear().type(Cypress.env('CYPRESS_AUTHORIZATION'));
+    cy.get('#customerId').clear().type(DEBIT_CUSTOMER_ID);
+    cy.get('#identity').clear().type(IDENTITY);
+    cy.get('#authorization').clear().type(AUTHORIZATION);
     cy.get('#btn').click();
 })
 
 Cypress.Commands.add('fillAndSubmitDelete', (accountId) => {
     cy.get('#accountId').clear().type(accountId || Cypress.env('accountId'));
-    cy.get('#identity').clear().type(Cypress.env('CYPRESS_IDENTITY'));
-    cy.get('#authorization').clear().type(Cypress.env('CYPRESS_AUTHORIZATION'));
-    if(Cypress.env('linkedAccountId')) {
-      cy.get('#linkedAccountId').clear().type(Cypress.env('linkedAccountId'));
+    cy.get('#identity').clear().type(IDENTITY);
+    cy.get('#authorization').clear().type(AUTHORIZATION);
+    if(Cypress.env('LINKED_ACCOUNT_ID')) {
+      cy.get('#linkedAccountId').clear().type(Cypress.env('LINKED_ACCOUNT_ID'));
     }
     cy.get('#btn').click();
 })

@@ -1,15 +1,12 @@
 /* E2E Cypress tests on getting card number, expiration date, */
 /* CVV via Bond SDK Card */
 
-describe('Sample Card Show Form', () => {
-  beforeEach(() => {
-    cy.visitPage();
-  });
+describe('Sample Debit Card Show Form', () => {
+
+  beforeEach(() => { cy.visitPage(); });
 
   it('get temporary token from studio auth service', () => {
-    //  Get Temporary token from Studio Auth Service
-    //  Temporary token is required
-    cy.getTempToken();
+    cy.getTempTokenDebit();
   });
 
   // it.skip('fill the form out in sample card show (Credit)', () => {
@@ -43,8 +40,6 @@ describe('Sample Card Show Form', () => {
   // });
 
   it('fill the form out in sample card show (Debit)', () => {
-    // find card id, and temporary token inputs
-    // and fill the form out - debit catd id
     cy.fillBrandBackendSectionOut(Cypress.env('DEBIT_CARD_ID'));
   });
 

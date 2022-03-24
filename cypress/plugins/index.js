@@ -26,27 +26,34 @@ module.exports = (on, config) => {
   // `config` is the resolved Cypress config
   config.baseUrl = process.env.CLIENT_ENDPOINT;
   config.env = {
-    identity: process.env.IDENTITY,
-    authorization: process.env.AUTHORIZATION,
-    clientEndpoint: process.env.CLIENT_ENDPOINT,
-    CREDIT_CARD_ID: process.env.CYPRESS_CREDIT_CARD_ID,
-    CREDIT_CARD_NUMBER: process.env.CYPRESS_CREDIT_CARD_NUMBER,
-    CREDIT_CARD_EXP: process.env.CYPRESS_CREDIT_CARD_EXP,
-    CREDIT_CARD_CVV: process.env.CYPRESS_CREDIT_CARD_CVV,
-    CREDIT_CARD_PIN: process.env.CYPRESS_CREDIT_CARD_PIN,
-    CREDIT_CARD_NEW_PIN: process.env.CYPRESS_CREDIT_CARD_NEW_PIN,
+    CLIENT_ENDPOINT: process.env.CLIENT_ENDPOINT,
+    SERVER_ENDPOINT: process.env.SERVER_ENDPOINT,
+    // Studio details
+    STUDIO_HOST: process.env.CYPRESS_STUDIO_HOST,
+    IDENTITY: process.env.CYPRESS_IDENTITY,
+    AUTHORIZATION: process.env.CYPRESS_AUTHORIZATION,
+    // Debit variables
+    DEBIT_CUSTOMER_ID: process.env.CYPRESS_DEBIT_CUSTOMER_ID,
     DEBIT_CARD_ID: process.env.CYPRESS_DEBIT_CARD_ID,
     DEBIT_CARD_NUMBER: process.env.CYPRESS_DEBIT_CARD_NUMBER,
     DEBIT_CARD_EXP: process.env.CYPRESS_DEBIT_CARD_EXP,
     DEBIT_CARD_CVV: process.env.CYPRESS_DEBIT_CARD_CVV,
     DEBIT_CARD_PIN: process.env.CYPRESS_DEBIT_CARD_PIN,
     DEBIT_CARD_NEW_PIN: process.env.CYPRESS_DEBIT_CARD_NEW_PIN,
-    customerId: process.env.CUSTOMER_ID,
+    // Credit variables
+    CREDIT_CUSTOMER_ID: process.env.CYPRESS_CREDIT_CUSTOMER_ID,
+    CREDIT_CARD_ID: process.env.CYPRESS_CREDIT_CARD_ID,
+    CREDIT_CARD_NUMBER: process.env.CYPRESS_CREDIT_CARD_NUMBER,
+    CREDIT_CARD_EXP: process.env.CYPRESS_CREDIT_CARD_EXP,
+    CREDIT_CARD_CVV: process.env.CYPRESS_CREDIT_CARD_CVV,
+    CREDIT_CARD_PIN: process.env.CYPRESS_CREDIT_CARD_PIN,
+    CREDIT_CARD_NEW_PIN: process.env.CYPRESS_CREDIT_CARD_NEW_PIN,
+    // are these used?
+    LINKED_ACCOUNT_ID: process.env.LINKED_ACCOUNT_ID,
     accountId: process.env.ACCOUNT_ID,
+    bondEnv: process.env.BOND_ENV,
     identityForExternalAccountsSDK: process.env.IDENTITY_FOR_EXTERNAL_ACCOUNTS_SDK,
     authorizationForExternalAccountsSDK: process.env.AUTHORIZATION_FOR_EXTERNAL_ACCOUNTS_SDK,
-    bondEnv: process.env.BOND_ENV,
-    serverEndpoint: process.env.SERVER_ENDPOINT,
   };
   return config;
 };

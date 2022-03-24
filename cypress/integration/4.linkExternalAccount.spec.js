@@ -1,12 +1,14 @@
 /// <reference types="cypress" />
 
 context('Actions', () => {
+
   beforeEach(() => {
+
     cy.visitPage('link-account')
 
     cy.intercept({
       method: 'POST',
-      url: `${Cypress.env('serverEndpoint')}`,
+      url: `${Cypress.env('SERVER_ENDPOINT')}`,
     }).as('apiCreateExternalAccount')
 
     cy.intercept({
@@ -16,14 +18,13 @@ context('Actions', () => {
 
     cy.intercept({
       method: 'POST',
-      url: `${Cypress.env('serverEndpoint')}/*`,
+      url: `${Cypress.env('SERVER_ENDPOINT')}/*`,
     }).as('apiExchangingTokens')
 
   });
 
   it('Link external account successfully', () => {
-
-    // custom command in the /cypress/support/commands.js file
+    
     cy.fillAndSubmitLink()
 
     cy.wait('@apiCreateExternalAccount').then(interception => {

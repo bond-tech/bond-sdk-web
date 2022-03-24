@@ -4,19 +4,12 @@
 describe("Sample PIN Setting", () => {
 
   beforeEach(() => {
-
     cy.intercept("/api/v0/cards/set_pin").as("pin_setting");
-
     cy.visitPage("sample_pin_setting");
-
   });
 
   it("get temporary token from studio auth service", () => {
-
-    //  Get Temporary token from Studio Auth Service
-    //  Temporary token is required
-    cy.getTempToken();
-
+    cy.getTempTokenDebit();
   });
 
   // it.skip("fill the brand backend section out in sample pin setting (Credit)", () => {
@@ -85,8 +78,10 @@ describe("Sample PIN Setting", () => {
     // verify the response indicating pin is changed successfully
     cy.get("[class=\"panel panel2\"]")
       .get("#result")
-      .should("have.text",
-              `card_id @ service: ${Cypress.env("DEBIT_CARD_ID")}\n      pin_changed @ service: true`);
+      .should(
+        "have.text",
+        `card_id @ service: ${Cypress.env("DEBIT_CARD_ID")}\n      pin_changed @ service: true`
+      );
 
   });
 

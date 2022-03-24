@@ -4,17 +4,11 @@
 describe('Sample Card Show Form Multiple', () => {
 
   beforeEach(() => {
-
     cy.visitPage('sample_card_show_multiple');
-
   })
 
   it('get temporary token from studio auth service', () => {
-
-    //  Get Temporary token from Studio Auth Service
-    //  Temporary token is required
-    cy.getTempToken();
-
+    cy.getTempTokenDebit();
   });
 
   // it.skip('fill the form out in sample card show multiple (Credit)', () => {
@@ -50,11 +44,7 @@ describe('Sample Card Show Form Multiple', () => {
   // });
 
   it('fill the form out in sample card show multiple (Debit)', () => {
-
-    // find card id, and temporary token inputs
-    // and fill the form out - debit card id
     cy.fillBrandBackendSectionOut(Cypress.env('DEBIT_CARD_ID'));
-
   });
 
   it('reveal card information in sample card show multiple (Debit)', () => {
@@ -75,9 +65,11 @@ describe('Sample Card Show Form Multiple', () => {
     cy.wait('@debit_card_show_multiple');
 
     // varify the response, the returned debit card number, expiration date and cvv
-    cy.verifyReavealedInfo( Cypress.env('DEBIT_CARD_NUMBER'),
-                            Cypress.env('DEBIT_CARD_EXP'),
-                            Cypress.env('DEBIT_CARD_CVV'));
+    cy.verifyReavealedInfo(
+      Cypress.env('DEBIT_CARD_NUMBER'),
+      Cypress.env('DEBIT_CARD_EXP'),
+      Cypress.env('DEBIT_CARD_CVV')
+    );
 
   });
 

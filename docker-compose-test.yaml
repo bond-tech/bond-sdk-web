@@ -1,6 +1,15 @@
 version: '3.8'
 services:
+  
   client:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        ARTIFACTORY_USER: ${ARTIFACTORY_USER}
+        ARTIFACTORY_API_KEY: ${ARTIFACTORY_API_KEY}
+        ARTIFACTORY_PYPI_REPOSITORY: ${ARTIFACTORY_PYPI_REPOSITORY}
+        ARTIFACTORY_URL: ${ARTIFACTORY_URL}
     environment:
       - BOND_ENV=sandbox.staging
       - SERVER_ENDPOINT=https://sandbox.staging.bond.tech/api/v0/accounts
@@ -11,15 +20,6 @@ services:
       - ACCOUNT_ID=${CYPRESS_ACCOUNT_ID}
       - IDENTITY_FOR_EXTERNAL_ACCOUNTS_SDK=${CYPRESS_IDENTITY_FOR_EXTERNAL_ACCOUNTS_SDK}
       - AUTHORIZATION_FOR_EXTERNAL_ACCOUNTS_SDK=${CYPRESS_AUTHORIZATION_FOR_EXTERNAL_ACCOUNTS_SDK}
-
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        ARTIFACTORY_USER: ${ARTIFACTORY_USER}
-        ARTIFACTORY_API_KEY: ${ARTIFACTORY_API_KEY}
-        ARTIFACTORY_PYPI_REPOSITORY: ${ARTIFACTORY_PYPI_REPOSITORY}
-        ARTIFACTORY_URL: ${ARTIFACTORY_URL}
     container_name: bond-sdk-web-client
     restart: unless-stopped
     ports:

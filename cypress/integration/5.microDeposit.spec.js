@@ -59,17 +59,18 @@ context('Actions', () => {
 });
 
 function getLinkedAccountId(cy, cb) {
+
   cy.intercept({
     method: 'GET',
-    url: `${Cypress.env('serverEndpoint')}/${Cypress.env('accountId')}/external_accounts/plaid`,
+    url: `${Cypress.env('SERVER_ENDPOINT')}/${Cypress.env('accountId')}/external_accounts/plaid`,
   }).as('apiPlaidGet');
 
   cy.intercept({
     method: 'POST',
-    url: `${Cypress.env('serverEndpoint')}/${Cypress.env('accountId')}/external_accounts/plaid`,
+    url: `${Cypress.env('SERVER_ENDPOINT')}/${Cypress.env('accountId')}/external_accounts/plaid`,
   }).as('apiPlaid');
 
-  Cypress.env('linkedAccountId', '')
+  Cypress.env('linkedAccountId', '');
 
   cy.visitPage('link-account');
 

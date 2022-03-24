@@ -24,11 +24,20 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+const CLIENT_ENDPOINT = Cypress.env('CLIENT_ENDPOINT');
+const STUDIO_HOST = Cypress.env('STUDIO_HOST');
+const IDENTITY = Cypress.env('IDENTITY');
+const AUTHORIZATION = Cypress.env('AUTHORIZATION');
+
+const DEBIT_CUSTOMER_ID = Cypress.env('DEBIT_CUSTOMER_ID');
+const CREDIT_CUSTOMER_ID = Cypress.env('CREDIT_CUSTOMER_ID');
+
 // ***********************************************
 // visit webpage
 // ***********************************************
+
 Cypress.Commands.add('visitPage', (name = 'index') => {
-  cy.visit(`${Cypress.env('clientEndpoint')}/${name}.html`);
+  cy.visit(`${CLIENT_ENDPOINT}/${name}.html`);
 
   cy.window().then((win) => {
     win.sessionStorage.clear();
@@ -38,22 +47,23 @@ Cypress.Commands.add('visitPage', (name = 'index') => {
 // ***********************************************
 // Retrieve temporary token from Studio Auth Service
 // ***********************************************
-Cypress.Commands.add('getTempToken', () => {
+
+Cypress.Commands.add('getTempTokenDebit', () => {
+
   cy.request({
     method: 'POST',
-    url: 'https://api.bond.tech/api/v0/auth/key/temporary',
+    url: `https://${STUDIO_HOST}/api/v0/auth/key/temporary`,
     headers: {
       'Content-Type': 'application/json',
-      Identity: Cypress.env('identity'),
-      Authorization: Cypress.env('authorization'),
+      Identity: IDENTITY,
+      Authorization: AUTHORIZATION,
     },
     body: {
-      customer_id: '7cc7edf5-028f-437c-802a-7fad4f224252',
+      customer_id: DEBIT_CUSTOMER_ID,
     },
     timeout: 120000,
     failOnStatusCode: false,
-  })
-    .as('temp_token')
+  }).as('debit_temp_token')
     .then((resp) => {
       if (
         !(
@@ -73,13 +83,59 @@ Cypress.Commands.add('getTempToken', () => {
       }
     });
 
-  cy.get('@temp_token').should((response) => {
+  cy.get('@debit_temp_token').should((response) => {
     expect(response).to.have.property('body');
     expect(response.body).to.have.property('Identity');
     expect(response.body).to.have.property('Authorization');
     window.Identity = response.body['Identity'];
     window.Authorization = response.body['Authorization'];
   });
+
+});
+
+Cypress.Commands.add('getTempTokenCredit', () => {
+  
+  cy.request({
+    method: 'POST',
+    url: `https://${STUDIO_HOST}/api/v0/auth/key/temporary`,
+    headers: {
+      'Content-Type': 'application/json',
+      Identity: IDENTITY,
+      Authorization: AUTHORIZATION,
+    },
+    body: {
+      customer_id: CREDIT_CUSTOMER_ID,
+    },
+    timeout: 120000,
+    failOnStatusCode: false,
+  }).as('credit_temp_token')
+    .then((resp) => {
+      if (
+        !(
+          resp.isOkStatusCode ||
+          (ignoreIfExists && resp.body === IGNORED_ERROR_MSG)
+        )
+      ) {
+        const EXCEPTION_MSG = 'Exception when requesting temporary token';
+        console.error(EXCEPTION_MSG + ':\n' + JSON.stringify(resp));
+        throw new Error(
+          EXCEPTION_MSG +
+            '.\nCode: ' +
+            JSON.stringify(resp.status) +
+            '\nMessage:' +
+            JSON.stringify(resp.body)
+        );
+      }
+    });
+
+  cy.get('@credit_temp_token').should((response) => {
+    expect(response).to.have.property('body');
+    expect(response.body).to.have.property('Identity');
+    expect(response.body).to.have.property('Authorization');
+    window.Identity = response.body['Identity'];
+    window.Authorization = response.body['Authorization'];
+  });
+
 });
 
 // ***********************************************
@@ -87,6 +143,7 @@ Cypress.Commands.add('getTempToken', () => {
 // - three input fields:
 //   Card id, Identity, and Authorization
 // ***********************************************
+
 Cypress.Commands.add('fillBrandBackendSectionOut', (card_id) => {
   cy.get('#card-id').type(card_id).should('have.value', card_id);
   cy.get('#identity')
@@ -103,6 +160,7 @@ Cypress.Commands.add('fillBrandBackendSectionOut', (card_id) => {
 // - three values in response to be verified:
 //   Card number, Expiration Date, and CVV
 // ***********************************************
+
 Cypress.Commands.add('verifyReavealedInfo', (card_num, card_exp, card_cvv) => {
   cy.get('[name=number]').then(($iframe) => {
     const $body = $iframe.contents().find('body');
@@ -122,18 +180,18 @@ Cypress.Commands.add('verifyReavealedInfo', (card_num, card_exp, card_cvv) => {
 
 // -- This is a parent command --
 Cypress.Commands.add('fillAndSubmitLink', () => {
-    cy.get('#customerId').clear().type(Cypress.env('customerId'));
-    cy.get('#identity').clear().type(Cypress.env('identityForExternalAccountsSDK'));
-    cy.get('#authorization').clear().type(Cypress.env('authorizationForExternalAccountsSDK'));
+    cy.get('#customerId').clear().type(DEBIT_CUSTOMER_ID);
+    cy.get('#identity').clear().type(IDENTITY);
+    cy.get('#authorization').clear().type(AUTHORIZATION);
     cy.get('#btn').click();
 })
 
 Cypress.Commands.add('fillAndSubmitDelete', (accountId) => {
     cy.get('#accountId').clear().type(accountId || Cypress.env('accountId'));
-    cy.get('#identity').clear().type(Cypress.env('identityForExternalAccountsSDK'));
-    cy.get('#authorization').clear().type(Cypress.env('authorizationForExternalAccountsSDK'));
-    if(Cypress.env('linkedAccountId')) {
-      cy.get('#linkedAccountId').clear().type(Cypress.env('linkedAccountId'));
+    cy.get('#identity').clear().type(IDENTITY);
+    cy.get('#authorization').clear().type(AUTHORIZATION);
+    if(Cypress.env('LINKED_ACCOUNT_ID')) {
+      cy.get('#linkedAccountId').clear().type(Cypress.env('LINKED_ACCOUNT_ID'));
     }
     cy.get('#btn').click();
 })

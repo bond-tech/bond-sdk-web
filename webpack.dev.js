@@ -5,6 +5,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
+
   entry: {
     "bond-sdk-web": [
       path.resolve(__dirname, "./src/show.js"),
@@ -64,7 +65,9 @@ module.exports = {
     hot: true,
     port: 8080,
   },
+
   plugins: [
+    new webpack.EnvironmentPlugin(['IDENTITY','AUTHORIZATION']),
     new CleanWebpackPlugin(),
     // Only update what has changed on hot reload
     new webpack.HotModuleReplacementPlugin(),

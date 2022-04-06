@@ -28,7 +28,6 @@ const reveal = () => {
   document.getElementById("toggle").textContent = "Redact";
 
   // use temporary key token to reveal appropriate field values
-
   loadingHelper('num', 'pending')
     bondCards
     .show({

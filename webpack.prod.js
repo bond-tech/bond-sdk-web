@@ -51,6 +51,7 @@ module.exports = {
     minimizer: [new TerserPlugin()],
   },
   plugins: [
+    new webpack.EnvironmentPlugin(['IDENTITY','AUTHORIZATION']),
     new CleanWebpackPlugin(),
     // Only update what has changed on hot reload
   ],

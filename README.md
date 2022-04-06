@@ -293,12 +293,9 @@ See [API Documentation](https://github.com/bond-tech/bond-sdk-external-accounts/
 
 The following script aliases are available:
 
-- `npm run doc`: Run JSDoc to create a 'docs' folder with automatically
-  generated documentation for the source code.
-- `npm run build`: Create a production build minified and transpiled js bundle
-  without any sample code.
-- `npm run start`: Lint SDK and Sample files, then Deploy a web server from the
-  root folder at `localhost:8080` to run the html samples.
+- `npm run doc`: Run JSDoc to create a 'docs' folder with automatically generated documentation for the source code.
+- `npm run build`: Create a production build minified and transpiled js bundle without any sample code.
+- `npm run start`: Lint SDK and Sample files, then Deploy a web server from the root folder at `localhost:8080` to run the html samples. Note the `webpack` config and sample scripts expect `IDENTITY` and `AUTHORIZATION` values in the environment. 
 
 ## Contact
 

@@ -1,6 +1,6 @@
 {
   "name": "bond-sdk-web",
-  "version": "0.0.13",
+  "version": "1.0.1",
   "description": "",
   "main": "dist/bond-sdk-web.js",
   "scripts": {

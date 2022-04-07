@@ -25,3 +25,5 @@ scripts/reset-original-files.sh
 .vscode/settings.json
 
 *.secret.*
+
+dist/

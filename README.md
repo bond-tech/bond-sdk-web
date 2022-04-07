@@ -253,7 +253,7 @@ Account linking starts a flow to link an account through online identity verfica
 ```js
 bondExternalAccounts
   .linkAccount({
-    customer_id: CUSTOMER_ID, // or business: BUSINESS_ID
+    customer_id: CUSTOMER_ID, // or business_id: BUSINESS_ID
     identity: TEMP_IDENTITY_TOKEN,
     authorization: TEMP_AUTH_TOKEN,
   })

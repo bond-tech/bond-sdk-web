@@ -8,8 +8,8 @@ btn.addEventListener('click', handleClick);
 
 function handleClick() {
   const accountId = (<HTMLInputElement>document.getElementById('accountId')).value;
-  const identity = (<HTMLInputElement>document.getElementById('identity')).value;
-  const authorization = (<HTMLInputElement>document.getElementById('authorization')).value;
+  const identity = process.env.IDENTITY;
+  const authorization = process.env.AUTHORIZATION;
 
   bondExternalAccounts.deleteExternalAccount({
     accountId,

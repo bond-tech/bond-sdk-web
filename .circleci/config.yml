@@ -75,10 +75,12 @@ jobs:
           name: Build and publish to local registry
           command: |
             docker run -d -p 5000:5000 --restart=always --name registry registry:2
-            docker build --build-arg NODE_ENV=NODE_ENV -t localhost:5000/bond-sdk-web:${CIRCLE_SHA1} .
+            docker build --build-arg NODE_ENV=NODE_ENV \
+              -t localhost:5000/bond-sdk-web:${CIRCLE_SHA1} .
             docker push localhost:5000/bond-sdk-web:${CIRCLE_SHA1}
             mkdir -p saved_images
-            docker save -o saved_images/docker_image_sdk.tar localhost:5000/bond-sdk-web:${CIRCLE_SHA1}
+            docker save -o saved_images/docker_image_sdk.tar \
+              localhost:5000/bond-sdk-web:${CIRCLE_SHA1}
       - persist_to_workspace:
           root: saved_images
           paths:
@@ -96,13 +98,15 @@ jobs:
       - artifactory-orb/configure
       - artifactory-orb/docker-login:
           docker-registry: ${ARTIFACTORY_REGISTRY}
+          
       - run:
           name: Start containers
           command: |
             docker load -i saved_images/docker_image_sdk.tar
             export SDK_IMAGE=<< pipeline.parameters.sdk-image >>
-            docker-compose -f docker-compose-test.yaml up -d
+            docker-compose up client -d
             sleep 30
+
       - run:
           name: Perform e2e Cypress Tests
           command: |
@@ -141,8 +145,8 @@ jobs:
             export ACCOUNT_ID=${CYPRESS_ACCOUNT_ID}
 
             # bring up tests
-            docker-compose -f docker-compose-cypress.yaml config
-            docker-compose -f docker-compose-cypress.yaml up \
+            docker-compose config
+            docker-compose up cypress \
               --timeout 30000 --exit-code-from cypress
 
           no_output_timeout: 6m

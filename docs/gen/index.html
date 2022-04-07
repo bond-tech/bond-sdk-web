@@ -80,8 +80,8 @@
 
     <section class="readme-section">
         <article><h1>Bond Web SDK</h1>
+<p>This GA SDK includes classes that help <a href="https://bond.tech">Brands Build on Bond</a>. Note that when working with <a href="https://bond.tech">Bond</a>, you'll create API Keys (for <code>sandbox</code> or <code>live</code> applications) to enable access to the platform. Then you're ready to build.</p>
 <h2>Requirements</h2>
-<p>When working with <a href="https://bond.tech">Bond</a>, you'll create API Keys to enable access to the platform. Then you're ready to build.</p>
 <p>To use this SDK you can just import it using the steps under 'Installation'. But if you'd like to build the repo yourself, with or without sample files, you'll need:</p>
 <ul>
 <li><a href="https://nodejs.org/">Node.js <strong>v6.3.0 or above</strong></a></li>
@@ -92,30 +92,23 @@ responsible for dependency management.</p>
 <h3>NPM</h3>
 <p>To install the module in your repo use your terminal to type:
 <code>npm install bond-sdk-web</code></p>
-<p>Then import it in your Javascript code:
+<p>Then import the key classes in your Javascript code:
 <code>import { BondCards, BondExternalAccounts } from 'bond-sdk-web';</code></p>
 <h3>CDN</h3>
-<p>Or you can install the SDK from a CDN.</p>
-<h4>Using JS</h4>
-<p><code>import { BondCards, BondExternalAccounts } from 'cdn.bond.tech/sdk/web/v1/bond-sdk-web.js';</code></p>
-<h4>Using HTML</h4>
-<p><code>&lt;script type=&quot;text/javascript&quot; src=&quot;cdn.bond.tech/sdk/web/v1/bond-sdk-web.js&quot;&gt;&lt;/script&gt;</code></p>
-<h2>Bond Card Management JavaScript SDK</h2>
-<p>Storing and processing card details including primary account number (PAN), CVV, expiration date, and personal identification number (PIN) involves complying with PCI DSS data security requirements. PCI compliance typically requires high overhead, so Bond created an SDK that vaults and tokenizes this card information. Using the below SDK, you can easily allow your customers to retrieve their card details, set PINs, and reset PINS without entering PCI scope, or worrying about seeing and storing your customers' sensitive card details.</p>
-<p>-This overview outlines Requirements, Installation, and Usage.
--The Docs folder provides Bond Cards SDK Documentation you can run.
--Then check out the sample files to see sample implementation you can build and run.</p>
-<h3>Usage</h3>
-<p>This SDK relies heavily on <a href="https://developers.google.com/web/fundamentals/getting-started/primers/promises">Promises</a>, making it easier to handle the asynchronous
-requests made to the API. The SDK provides a <code>BondCards</code> object containing
-several methods which map to the calls and parameters described in <a href="https://docs.bond.tech/docs/retrieve-card-details-set-pins-and-reset-pins">BondCards's API documentation</a>.</p>
-<p>The following snippet is a generic example of how brands can use the SDK. If you need
-details for a specific module, refer to the <a href="https://github.com/bond-tech/bond-sdk-web">sample files</a>.</p>
-<p>Before executing any request, you need to authorize the calls to the Bond API:</p>
-<h4>Using temporary tokens</h4>
+<p>Or you can install the SDK from a CDN with <code>js</code></p>
+<pre class="prettyprint source"><code>import { BondCards, BondExternalAccounts } from 'cdn.bond.tech/sdk/web/v1/bond-sdk-web.js';
+</code></pre>
+<p>or in <code>html</code></p>
+<pre class="prettyprint source"><code>&lt;script type=&quot;text/javascript&quot; src=&quot;cdn.bond.tech/sdk/web/v1/bond-sdk-web.js&quot;>&lt;/script>
+</code></pre>
+<p>Bond archives all released versions of the SDK according to SemVer, and you can access any major-minor-patch version using URLs like the following:</p>
+<pre class="prettyprint source"><code>&lt;script type=&quot;text/javascript&quot; src=&quot;cdn.bond.tech/sdk/web/v/1/0/0/bond-sdk-web.js&quot;>&lt;/script>
+</code></pre>
+<h2>Using Temporary Tokens</h2>
+<p>Before executing any request, you need to authorize the calls to the Bond API</p>
 <ol>
-<li>Make an authorized call from your backend with the correct customer_id to
-receive temporary tokens of {Identity, Authorization}.</li>
+<li>Make an authorized call <em>from your backend</em> with the correct customer_id to
+receive temporary tokens of {Identity, Authorization}. Use these limited in scope-and-time values to make requests from your app, <em>not</em> your own studio API keys.</li>
 </ol>
 <p>cURL</p>
 <pre class="prettyprint source"><code>curl --request POST \
@@ -213,13 +206,24 @@ request.AddHeader(&quot;Authorization&quot;, &quot;YOUR_AUTHORIZATION&quot;);
 request.AddParameter(&quot;application/json&quot;, {&quot;customer_id&quot;: &quot;YOUR_CUSTOMER_ID&quot;}, ParameterType.RequestBody);
 IRestResponse response = client.Execute(request);
 </code></pre>
-<h3>Initialize BondCards</h3>
+<h2>Bond Card Management JavaScript SDK</h2>
+<p>Storing and processing card details including primary account number (PAN), CVV, expiration date, and personal identification number (PIN) involves complying with PCI DSS data security requirements. PCI compliance typically requires high overhead, so Bond created an SDK that vaults and tokenizes this card information. Using the below SDK, you can easily allow your customers to retrieve their card details, set PINs, and reset PINS without entering PCI scope, or worrying about seeing and storing your customers' sensitive card details.</p>
+<p>-This overview outlines Requirements, Installation, and Usage.
+-The <code>docs</code> folder here provides Bond Cards SDK Documentation you can run.
+-Then check out the sample files to see sample implementation you can build and run.</p>
+<h3>Usage</h3>
+<p>This SDK relies heavily on <a href="https://developers.google.com/web/fundamentals/getting-started/primers/promises">Promises</a>, making it easier to handle the asynchronous
+requests made to the API. The SDK provides a <code>BondCards</code> object containing
+several methods which map to the calls and parameters described in <a href="https://docs.bond.tech/docs/retrieve-card-details-set-pins-and-reset-pins">BondCards's API documentation</a>.</p>
+<p>The following snippet is a generic example of how brands can use the SDK. If you need
+details for a specific module, refer to the <a href="https://github.com/bond-tech/bond-sdk-web">sample files</a>.</p>
+<h4>Initialize BondCards</h4>
 <ol start="2">
-<li>Call the constructor ( 'live: false' to access the Sandbox environment )</li>
+<li>Call the constructor (pass <code>{live: true}</code> to access the Live environment)</li>
 </ol>
-<pre class="prettyprint source lang-js"><code>const bondCards = new BondCards({ live: true });
+<pre class="prettyprint source lang-js"><code>const bondCards = new BondCards({ live: false });
 </code></pre>
-<h3>Making requests</h3>
+<h4>Making requests</h4>
 <ol start="3">
 <li>You can now use the various methods from the SDK to reveal/manage PCI-sensitive
 data for a particular Bond Card ID. Following the Promises notation, you should
@@ -262,43 +266,45 @@ bondCards
         // Handle hide loader
     });
 </code></pre>
-<h2>Bond External Accounts JavaScript SDK</h2>
+<h3>Bond External Accounts JavaScript SDK</h3>
+<p><a href="https://docs.bond.tech/docs/moving-money-in-and-out-of-a-card">Money movement</a> to cards may require <a href="https://docs.bond.tech/docs/linking-a-card-to-an-external-account">external account linking</a> to transfer funds from a customer's bank account to a card, or vice versa. The <code>BondExternalAccounts</code> provides tooling to help link accounts to customers or business and their cards in your app.</p>
 <p>-This overview outlines Requirements, Installation, and Usage.
--The Docs folder provides Bond External Accounts SDK Documentation you can run.</p>
-<h3>Initialize BondExternalAccounts</h3>
-<p>Call the constructor ( &quot;{ bondEnv: 'sandbox' }&quot; to access the Sandbox environment )</p>
-<pre class="prettyprint source lang-js"><code>const bondExternalAccounts = new BondExternalAccounts({ bondEnv: 'sandbox'});
+-The <code>docs</code> folder here provides Bond External Accounts SDK Documentation you can run.</p>
+<h4>Initialize BondExternalAccounts</h4>
+<p>Call the constructor (pass <code>{ live: true }</code> to access the Live environment)</p>
+<pre class="prettyprint source lang-js"><code>const bondExternalAccounts = new BondExternalAccounts({ live: false});
 </code></pre>
-<h4>The following environments are supported:</h4>
-<ul>
-<li><code>sandbox.dev</code></li>
-<li><code>api.dev</code></li>
-<li><code>sandbox.staging</code></li>
-<li><code>api.staging</code></li>
-<li><code>sandbox</code></li>
-<li><code>api</code></li>
-</ul>
-<h3>Making requests</h3>
-<h4>Link account</h4>
+<h4>Linking account</h4>
+<p>Account linking starts a flow to link an account through online identity verfication and account selection. Start this flow in your app with:</p>
 <pre class="prettyprint source lang-js"><code>bondExternalAccounts
   .linkAccount({
-    accountId: [ACCOUNT_ID],
-    identity: [TEMP_IDENTITY_TOKEN],
-    authorization: [TEMP_AUTH_TOKEN],
+    customer_id: CUSTOMER_ID, // or business: BUSINESS_ID
+    identity: TEMP_IDENTITY_TOKEN,
+    authorization: TEMP_AUTH_TOKEN,
   })
 </code></pre>
-<h4>Micro deposit</h4>
+<h4>Microdeposits</h4>
+<p>Customers may need to undertake a <a href="https://docs.bond.tech/docs/moving-money-in-and-out-of-a-card">microdeposit</a> to verify their account. Start this flow with:</p>
 <pre class="prettyprint source lang-js"><code>bondExternalAccounts
   .microDeposit({
-    accountId: [ACCOUNT_ID],
-    linkedAccountId: [LINKED_ACCOUNT_ID],
-    identity: [TEMP_IDENTITY_TOKEN],
-    authorization: [TEMP_AUTH_TOKEN],
+    accountId: ACCOUNT_ID,
+    linkedAccountId: LINKED_ACCOUNT_ID,
+    identity: TEMP_IDENTITY_TOKEN,
+    authorization: TEMP_AUTH_TOKEN,
   })
 </code></pre>
-<h3>Available methods</h3>
+<h4>Account Deletion</h4>
+<p>Delete linked external accounts with:</p>
+<pre class="prettyprint source lang-js"><code>bondExternalAccounts
+  .microDeposit({
+    accountId: LINKED_ACCOUNT_ID,
+    identity: TEMP_IDENTITY_TOKEN,
+    authorization: TEMP_AUTH_TOKEN,
+  })
+</code></pre>
+<h4>Available methods</h4>
 <p>See <a href="https://github.com/bond-tech/bond-sdk-external-accounts/docs/gen/BondExternalAccounts.html">API Documentation</a></p>
-<h4>Working with the Repo</h4>
+<h2>Working with the Repo</h2>
 <p>The following script aliases are available:</p>
 <ul>
 <li><code>npm run doc</code>: Run JSDoc to create a 'docs' folder with automatically
@@ -308,11 +314,8 @@ without any sample code.</li>
 <li><code>npm run start</code>: Lint SDK and Sample files, then Deploy a web server from the
 root folder at <code>localhost:8080</code> to run the html samples.</li>
 </ul>
-<h4>Developing the BondExternalAccounts SDK</h4>
-<p>To handle all implementation use cases, Engineers should always build this
-project (<code>npm run build</code>) before committing.</p>
-<p>Include the /dist folder in your commit for customers that link to the built
-bond-sdk-external-accounts.js file directly.</p></article>
+<h2>Contact</h2>
+<p>Contact your Bond support representative or the developer experience team at <a href="mailto:devex-eng@bond.tech">devex-eng@bond.tech</a> with questions, concerns, or feature requests regarding this SDK.</p></article>
     </section>
 
 
@@ -358,7 +361,7 @@ bond-sdk-external-accounts.js file directly.</p></article>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.10</a>
 	
-		on March 22nd 2022, 11:16:16 am
+		on April 6th 2022, 12:31:33 pm
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

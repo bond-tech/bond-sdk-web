@@ -34,7 +34,7 @@ or in `html`
 ```
 Bond archives all released versions of the SDK according to SemVer, and you can access any major-minor-patch version using URLs like the following: 
 ```
-<script type="text/javascript" src="cdn.bond.tech/sdk/web/v/1/0/0/bond-sdk-web.js"></script>
+<script type="text/javascript" src="cdn.bond.tech/sdk/web/v/1/0/1/bond-sdk-web.js"></script>
 ```
 
 ## Using Temporary Tokens
@@ -165,9 +165,7 @@ IRestResponse response = client.Execute(request);
 
 Storing and processing card details including primary account number (PAN), CVV, expiration date, and personal identification number (PIN) involves complying with PCI DSS data security requirements. PCI compliance typically requires high overhead, so Bond created an SDK that vaults and tokenizes this card information. Using the below SDK, you can easily allow your customers to retrieve their card details, set PINs, and reset PINS without entering PCI scope, or worrying about seeing and storing your customers' sensitive card details.
 
--This overview outlines Requirements, Installation, and Usage.
--The `docs` folder here provides Bond Cards SDK Documentation you can run.
--Then check out the sample files to see sample implementation you can build and run.
+This overview outlines usage. The `docs` folder here provides Bond Cards SDK Documentation you can run. You can also check out the [sample files](src) to see sample implementation you can build and run.
 
 ### Usage
 
@@ -237,8 +235,7 @@ bondCards
 
 [Money movement](https://docs.bond.tech/docs/moving-money-in-and-out-of-a-card) to cards may require [external account linking](https://docs.bond.tech/docs/linking-a-card-to-an-external-account) to transfer funds from a customer's bank account to a card, or vice versa. The `BondExternalAccounts` provides tooling to help link accounts to customers or business and their cards in your app. 
 
--This overview outlines Requirements, Installation, and Usage.
--The `docs` folder here provides Bond External Accounts SDK Documentation you can run.
+This overview outlines usage. The `docs` folder here provides Bond External Accounts SDK Documentation you can run. There are also [sample files](src) you can explore. 
 
 #### Initialize BondExternalAccounts
 

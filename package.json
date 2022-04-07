@@ -36,7 +36,7 @@
     "css-loader": "^5.2.7",
     "cypress": "^8.7.0",
     "cypress-terminal-report": "^3.4.2",
-    "eslint": "~3.7.1",
+    "eslint": ">= 4.12.1",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-import": "^2.23.4",

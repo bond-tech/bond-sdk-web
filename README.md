@@ -1,6 +1,6 @@
 # Bond Web SDK
 
-This GA SDK includes classes that help [Brands Build on Bond](https://bond.tech). Note that when working with [Bond](https://bond.tech), you'll create API Keys (for `sandbox` or `live` applications) to enable access to the platform. Then you're ready to build.
+This GA SDK includes classes that help [Brands Build on Bond](https://bond.tech). Note that when working with [Bond](https://bond.tech), you'll create API Keys (for `sandbox` or `live` applications) to enable access to the platform. Then you're ready to build. You can even [sign up for our sandbox](https://signup.bond.tech/?step=1) yourself. 
 
 
 ## Requirements

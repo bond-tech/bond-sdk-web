@@ -231,8 +231,8 @@ workflows:
                   - main
 
     jobs:
-      - publish_local_registry
+      # - publish_local_registry
       - cypress:
           context: bond_web_sdk_cypress
-          requires:
-            - publish_local_registry
+          # requires:
+          #   - publish_local_registry

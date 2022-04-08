@@ -45,46 +45,27 @@ jobs:
           paths:
             - "?*"
 
-  build:
-    docker:
-      - image: cimg/node:<< pipeline.parameters.node-version >>
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - << pipeline.parameters.image-name >>-deps-v<< pipeline.parameters.cache-version >>-{{ checksum "package.json" }}
-      - run: npm install
-      - save_cache:
-          paths: 
-            - node_modules
-          key: << pipeline.parameters.image-name >>-deps-v<< pipeline.parameters.cache-version >>-{{ checksum "package.json" }}
-      - run: npm run build
-      - persist_to_workspace:
-          root: dist
-          paths:
-            - "?*"
-
-  publish_local_registry:
-    docker:
-      - image: cimg/node:<< pipeline.parameters.node-version >>
-    steps:
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - checkout
-      - run:
-          name: Build and publish to local registry
-          command: |
-            docker run -d -p 5000:5000 --restart=always --name registry registry:2
-            docker build --build-arg NODE_ENV=NODE_ENV \
-              -t localhost:5000/bond-sdk-web:${CIRCLE_SHA1} .
-            docker push localhost:5000/bond-sdk-web:${CIRCLE_SHA1}
-            mkdir -p saved_images
-            docker save -o saved_images/docker_image_sdk.tar \
-              localhost:5000/bond-sdk-web:${CIRCLE_SHA1}
-      - persist_to_workspace:
-          root: saved_images
-          paths:
-            - docker_image_sdk.tar
+  # publish_local_registry:
+  #   docker:
+  #     - image: cimg/node:<< pipeline.parameters.node-version >>
+  #   steps:
+  #     - setup_remote_docker:
+  #         docker_layer_caching: true
+  #     - checkout
+  #     - run:
+  #         name: Build and publish to local registry
+  #         command: |
+  #           docker run -d -p 5000:5000 --restart=always --name registry registry:2
+  #           docker build --build-arg NODE_ENV=NODE_ENV \
+  #             -t localhost:5000/bond-sdk-web:${CIRCLE_SHA1} .
+  #           docker push localhost:5000/bond-sdk-web:${CIRCLE_SHA1}
+  #           mkdir -p saved_images
+  #           docker save -o saved_images/docker_image_sdk.tar \
+  #             localhost:5000/bond-sdk-web:${CIRCLE_SHA1}
+  #     - persist_to_workspace:
+  #         root: saved_images
+  #         paths:
+  #           - docker_image_sdk.tar
 
   cypress:
     docker:
@@ -92,19 +73,20 @@ jobs:
     steps:
       - setup_remote_docker
       - checkout
-      - attach_workspace:
-          at: saved_images
-      - artifactory-orb/install
-      - artifactory-orb/configure
-      - artifactory-orb/docker-login:
-          docker-registry: ${ARTIFACTORY_REGISTRY}
-          
+
+      #- attach_workspace:
+      #    at: saved_images
+      # - artifactory-orb/install
+      # - artifactory-orb/configure
+      # - artifactory-orb/docker-login:
+      #     docker-registry: ${ARTIFACTORY_REGISTRY}
+
       - run:
-          name: Start containers
+          name: Build and start app container
           command: |
-            docker load -i saved_images/docker_image_sdk.tar
+            # docker load -i saved_images/docker_image_sdk.tar
             export SDK_IMAGE=<< pipeline.parameters.sdk-image >>
-            docker-compose up client -d
+            docker-compose up client -d --build
             sleep 30
 
       - run:
@@ -150,6 +132,25 @@ jobs:
               --timeout 30000 --exit-code-from cypress
 
           no_output_timeout: 6m
+
+  build:
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-version >>
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - << pipeline.parameters.image-name >>-deps-v<< pipeline.parameters.cache-version >>-{{ checksum "package.json" }}
+      - run: npm install
+      - save_cache:
+          paths: 
+            - node_modules
+          key: << pipeline.parameters.image-name >>-deps-v<< pipeline.parameters.cache-version >>-{{ checksum "package.json" }}
+      - run: npm run build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - dist/*
 
   push_to_cdn:
     executor: aws-cli/default
@@ -197,11 +198,11 @@ workflows:
   pipeline:
     jobs:
 
-      - publish_local_registry
+      # - publish_local_registry
       - cypress:
           context: bond_web_sdk_cypress
-          requires:
-            - publish_local_registry
+          # requires:
+          #   - publish_local_registry
 
       - build:
           requires:
@@ -215,7 +216,6 @@ workflows:
           context: npm_publish
           requires:
             - build
-            - cypress
           filters:
             branches:
               only:
@@ -233,6 +233,6 @@ workflows:
     jobs:
       - publish_local_registry
       - cypress:
-          context: bond_cypress_tests
+          context: bond_web_sdk_cypress
           requires:
             - publish_local_registry

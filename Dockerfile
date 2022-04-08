@@ -4,4 +4,4 @@ ENV NODE_ENV=$NODE_ENV
 WORKDIR /app
 COPY . /app
 RUN npm install && npm install -g serve express
-CMD ["/bin/sh", "start.sh"]
+CMD ["/bin/sh", "start.client.sh"]

@@ -8,8 +8,10 @@
 # # # # # # # # # # # # # # # # # # # # 
 FROM cypress/included:8.3.0
 COPY package.json .
-RUN npm install
+RUN npm install && npm install -g wait-on
 
 COPY cypress cypress
 COPY cypress.json .
-CMD ["npx","cypress","run","--headless","--browser", "chrome", "--record"]
+COPY start.cypress.sh .
+# CMD ["npx","cypress","run","--headless","--browser", "chrome", "--record"]
+CMD ["/bin/sh","start.cypress.sh"]

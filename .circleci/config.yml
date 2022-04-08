@@ -81,14 +81,14 @@ jobs:
       # - artifactory-orb/docker-login:
       #     docker-registry: ${ARTIFACTORY_REGISTRY}
 
-      - run:
-          name: Build and start app container
-          command: |
-            # docker load -i saved_images/docker_image_sdk.tar
-            export SDK_IMAGE=<< pipeline.parameters.sdk-image >>
-            docker-compose up client -d --build
-            sleep 30
-
+      # - run:
+      #     name: Build and start app container
+      #     command: |
+      #       # docker load -i saved_images/docker_image_sdk.tar
+      #       export SDK_IMAGE=<< pipeline.parameters.sdk-image >>
+      #       docker-compose up client -d --build
+      #       sleep 30
+      
       - run:
           name: Perform e2e Cypress Tests
           command: |
@@ -128,7 +128,8 @@ jobs:
 
             # bring up tests
             docker-compose config
-            docker-compose up cypress \
+            # docker-compose up cypress \
+            docker-compose up --build \
               --timeout 30000 --exit-code-from cypress
 
           no_output_timeout: 6m
@@ -148,9 +149,9 @@ jobs:
           key: << pipeline.parameters.image-name >>-deps-v<< pipeline.parameters.cache-version >>-{{ checksum "package.json" }}
       - run: npm run build
       - persist_to_workspace:
-          root: .
+          root: dist
           paths:
-            - dist/*
+            - "?*"
 
   push_to_cdn:
     executor: aws-cli/default

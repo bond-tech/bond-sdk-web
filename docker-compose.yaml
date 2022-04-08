@@ -75,5 +75,5 @@ services:
         ARTIFACTORY_URL: ${ARTIFACTORY_URL}
     container_name: cypress
     restart: unless-stopped
-    extra_hosts:
-      - 'bond-sdk-web-client:${SDK_CONTAINER_IP}'
+    # extra_hosts:
+    #   - 'bond-sdk-web-client:${SDK_CONTAINER_IP}'

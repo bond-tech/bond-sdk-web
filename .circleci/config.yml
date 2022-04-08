@@ -88,7 +88,7 @@ jobs:
       #       export SDK_IMAGE=<< pipeline.parameters.sdk-image >>
       #       docker-compose up client -d --build
       #       sleep 30
-      
+
       - run:
           name: Perform e2e Cypress Tests
           command: |
@@ -127,7 +127,7 @@ jobs:
             export ACCOUNT_ID=${CYPRESS_ACCOUNT_ID}
 
             # bring up tests
-            docker-compose config
+            # docker-compose config
             # docker-compose up cypress \
             docker-compose up --build \
               --timeout 30000 --exit-code-from cypress

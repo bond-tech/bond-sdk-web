@@ -97,9 +97,9 @@ jobs:
           name: Perform e2e Cypress Tests
           command: |
 
-            SDK_CONTAINER_ID=$(docker ps -aqf "name=bond-sdk-web-client")
-            SDK_CONTAINER_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $SDK_CONTAINER_ID)
-            export SDK_CONTAINER_IP=${SDK_CONTAINER_IP}
+            # SDK_CONTAINER_ID=$(docker ps -aqf "name=bond-sdk-web-client")
+            # SDK_CONTAINER_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $SDK_CONTAINER_ID)
+            # export SDK_CONTAINER_IP=${SDK_CONTAINER_IP}
             export CYPRESS_STUDIO_HOST=sandbox.bond.tech
             export CYPRESS_SERVER_ENDPOINT=https://sandbox.bond.tech/api/v0/accounts
 

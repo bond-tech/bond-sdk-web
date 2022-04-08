@@ -52,8 +52,8 @@ module.exports = (on, config) => {
     LINKED_ACCOUNT_ID: process.env.LINKED_ACCOUNT_ID,
     accountId: process.env.ACCOUNT_ID,
     bondEnv: process.env.BOND_ENV,
-    identityForExternalAccountsSDK: process.env.IDENTITY_FOR_EXTERNAL_ACCOUNTS_SDK,
-    authorizationForExternalAccountsSDK: process.env.AUTHORIZATION_FOR_EXTERNAL_ACCOUNTS_SDK,
+    identityForExternalAccountsSDK: process.env.CYPRESS_IDENTITY,
+    authorizationForExternalAccountsSDK: process.env.CYPRESS_AUTHORIZATION,
   };
   return config;
 };

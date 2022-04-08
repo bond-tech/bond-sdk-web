@@ -181,15 +181,15 @@ Cypress.Commands.add('verifyReavealedInfo', (card_num, card_exp, card_cvv) => {
 // -- This is a parent command --
 Cypress.Commands.add('fillAndSubmitLink', () => {
     cy.get('#customerId').clear().type(DEBIT_CUSTOMER_ID);
-    cy.get('#identity').clear().type(IDENTITY);
-    cy.get('#authorization').clear().type(AUTHORIZATION);
+    // cy.get('#identity').clear().type(IDENTITY);
+    // cy.get('#authorization').clear().type(AUTHORIZATION);
     cy.get('#btn').click();
 })
 
 Cypress.Commands.add('fillAndSubmitDelete', (accountId) => {
     cy.get('#accountId').clear().type(accountId || Cypress.env('accountId'));
-    cy.get('#identity').clear().type(IDENTITY);
-    cy.get('#authorization').clear().type(AUTHORIZATION);
+    // cy.get('#identity').clear().type(IDENTITY);
+    // cy.get('#authorization').clear().type(AUTHORIZATION);
     if(Cypress.env('LINKED_ACCOUNT_ID')) {
       cy.get('#linkedAccountId').clear().type(Cypress.env('LINKED_ACCOUNT_ID'));
     }

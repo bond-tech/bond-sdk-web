@@ -1,3 +1,4 @@
 #!/bin/sh
-npm run build
-node ./serveStatic.js
+npm run build:dev
+PORT=8080 serve dist
+# node ./serveStatic.js

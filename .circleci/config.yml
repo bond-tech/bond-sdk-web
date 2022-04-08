@@ -74,21 +74,6 @@ jobs:
       - setup_remote_docker
       - checkout
 
-      #- attach_workspace:
-      #    at: saved_images
-      # - artifactory-orb/install
-      # - artifactory-orb/configure
-      # - artifactory-orb/docker-login:
-      #     docker-registry: ${ARTIFACTORY_REGISTRY}
-
-      # - run:
-      #     name: Build and start app container
-      #     command: |
-      #       # docker load -i saved_images/docker_image_sdk.tar
-      #       export SDK_IMAGE=<< pipeline.parameters.sdk-image >>
-      #       docker-compose up client -d --build
-      #       sleep 30
-
       - run: 
           name: Build
           command: docker-compose build
@@ -96,10 +81,7 @@ jobs:
       - run:
           name: Perform e2e Cypress Tests
           command: |
-
-            # SDK_CONTAINER_ID=$(docker ps -aqf "name=bond-sdk-web-client")
-            # SDK_CONTAINER_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $SDK_CONTAINER_ID)
-            # export SDK_CONTAINER_IP=${SDK_CONTAINER_IP}
+          
             export CYPRESS_STUDIO_HOST=sandbox.bond.tech
             export CYPRESS_SERVER_ENDPOINT=https://sandbox.bond.tech/api/v0/accounts
 

@@ -20,18 +20,17 @@ services:
       - ACCOUNT_ID=${CYPRESS_ACCOUNT_ID}
       - IDENTITY_FOR_EXTERNAL_ACCOUNTS_SDK=${CYPRESS_IDENTITY_FOR_EXTERNAL_ACCOUNTS_SDK}
       - AUTHORIZATION_FOR_EXTERNAL_ACCOUNTS_SDK=${CYPRESS_AUTHORIZATION_FOR_EXTERNAL_ACCOUNTS_SDK}
-    container_name: bond-sdk-web-client
-    restart: unless-stopped
     ports:
       - 8080:8080
+    restart: unless-stopped
 
   cypress:
     environment:
       # Cypress project
       - CYPRESS_RECORD_KEY=${CYPRESS_RECORD_KEY}
       # Application URLs
-      - CYPRESS_BASE_URL=http://bond-sdk-web-client:8080
-      - CLIENT_ENDPOINT=http://bond-sdk-web-client:8080
+      - CYPRESS_BASE_URL=http://client:8080
+      - CLIENT_ENDPOINT=http://client:8080
       # Studio access variables
       - CYPRESS_STUDIO_HOST=${CYPRESS_STUDIO_HOST}
       - CYPRESS_IDENTITY=${CYPRESS_IDENTITY}

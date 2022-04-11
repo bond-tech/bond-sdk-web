@@ -50,10 +50,7 @@ module.exports = (on, config) => {
     CREDIT_CARD_NEW_PIN: process.env.CYPRESS_CREDIT_CARD_NEW_PIN,
     // are these used?
     LINKED_ACCOUNT_ID: process.env.LINKED_ACCOUNT_ID,
-    accountId: process.env.ACCOUNT_ID,
-    bondEnv: process.env.BOND_ENV,
-    identityForExternalAccountsSDK: process.env.CYPRESS_IDENTITY,
-    authorizationForExternalAccountsSDK: process.env.CYPRESS_AUTHORIZATION,
+    ACCOUNT_ID: process.env.ACCOUNT_ID,
   };
   return config;
 };

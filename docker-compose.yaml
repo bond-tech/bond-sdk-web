@@ -5,19 +5,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        ARTIFACTORY_USER: ${ARTIFACTORY_USER}
-        ARTIFACTORY_API_KEY: ${ARTIFACTORY_API_KEY}
-        ARTIFACTORY_PYPI_REPOSITORY: ${ARTIFACTORY_PYPI_REPOSITORY}
-        ARTIFACTORY_URL: ${ARTIFACTORY_URL}
     environment:
-      - BOND_ENV=sandbox
-      - SERVER_ENDPOINT=https://sandbox.bond.tech/api/v0/accounts
-      - CYPRESS_BASE_URL=http://localhost:8080
-      - CLIENT_ENDPOINT=http://localhost:8080
       - IDENTITY=${CYPRESS_IDENTITY}
       - AUTHORIZATION=${CYPRESS_AUTHORIZATION}
-      - ACCOUNT_ID=${CYPRESS_ACCOUNT_ID}
+      # - BOND_ENV=sandbox
+      # - SERVER_ENDPOINT=https://sandbox.bond.tech/api/v0/accounts
+      # - CYPRESS_BASE_URL=http://localhost:8080
+      # - CLIENT_ENDPOINT=http://localhost:8080
+      # - ACCOUNT_ID=${CYPRESS_ACCOUNT_ID}
     ports:
       - 8080:8080
     restart: unless-stopped
@@ -69,6 +64,6 @@ services:
         ARTIFACTORY_PYPI_REPOSITORY: ${ARTIFACTORY_PYPI_REPOSITORY}
         ARTIFACTORY_URL: ${ARTIFACTORY_URL}
     container_name: cypress
-    restart: unless-stopped
+    # restart: unless-stopped
     # extra_hosts:
     #   - 'bond-sdk-web-client:${SDK_CONTAINER_IP}'

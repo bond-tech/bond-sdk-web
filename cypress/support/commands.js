@@ -187,7 +187,7 @@ Cypress.Commands.add('fillAndSubmitLink', () => {
 })
 
 Cypress.Commands.add('fillAndSubmitDelete', (accountId) => {
-    cy.get('#accountId').clear().type(accountId || Cypress.env('accountId'));
+    cy.get('#accountId').clear().type(accountId || Cypress.env('ACCOUNT_ID'));
     // cy.get('#identity').clear().type(IDENTITY);
     // cy.get('#authorization').clear().type(AUTHORIZATION);
     if(Cypress.env('LINKED_ACCOUNT_ID')) {

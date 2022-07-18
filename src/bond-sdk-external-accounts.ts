@@ -305,8 +305,7 @@ class BondExternalAccounts {
      * @param {String} authorization Set authorization token.
      */
     async _createExternalAccount(id: { customer_id?: string; business_id?: string }, { identity, authorization }: Credentials, redirect_uri?: string) {
-        // const res = await fetch(`${this.bondHost}/api/v0/accounts`, {
-        const res = await fetch(`http://localhost:5000/api/v0/accounts`, {
+        const res = await fetch(`${this.bondHost}/api/v0/accounts`, {
             method: 'POST',
             headers: {
                 'Identity': identity,

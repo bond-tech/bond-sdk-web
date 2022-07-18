@@ -121,7 +121,7 @@ class BondExternalAccounts {
     }
 
     /**
-     * Connect external accoun.
+     * Connect external account.
      * @param {String} customerId Set customer id.
      * @param {String} businessId Set business id.
      * @param {String} redirectUri Optional OAuth redirect uri - must be preconfigured with Bond support.
@@ -137,8 +137,8 @@ class BondExternalAccounts {
         }: LinkAccountParams
     ) {
         const credentials: Credentials = {
-            identity: '7408c066-d0d0-48ae-84ae-0abca1d803ab',
-            authorization: 'x8T3IWnEzGteMC/ylo7kztaWNG0dd1i5oGLzknr6i6RUsbyVksA5++dOp912ohQB',
+            identity,
+            authorization,
         }
 
         // `account_id` is used as `linked_account_id` for micro deposit flow
@@ -150,43 +150,14 @@ class BondExternalAccounts {
 
         const response = await this._initializePlaidLink(link_token);
 
-        // If plaid link returns here, user is proceeding with non-OAuth flow. Clear stored params.
-        localStorage.clearItem('linkParams');
+        // If the user is advancing with the OAuth flow, they will be navigated away before the Promise above is resolved. Handle the non-OAuth flow from here forward.
+        localStorage.removeItem('linkParams');
 
-        if( (response as PlaidSuccessResponse).public_token ) {
-            const successResponse = response as PlaidSuccessResponse;
-            const public_token = successResponse.public_token;
-            const metadata = successResponse.metadata;
-            const external_account_id = metadata.account_id;
-            const payload = {
-                public_token,
-                external_account_id,
-                verification_status: metadata.account.verification_status || 'instantly_verified',
-                bank_name: metadata.institution.name,
-            }
-
-            await this._exchangingTokens(account_id, payload, credentials);
-
-            const externalAccounts = await this._getExternalAccounts(customer_id ? customer_id: business_id, credentials);
-            const linkedAccount = externalAccounts.find(account => account.linked_account_id == account_id);
-            return {
-                status: "linked",
-                linkedAccount: linkedAccount ? linkedAccount : null,
-                linkedAccountId: account_id,
-                externalAccounts: externalAccounts,
-            };
-        } else {
-            await this._deleteExternalAccount(account_id, credentials);
-            return {
-                status: "interrupted",
-                plaidResponse: (response as PlaidExitResponse),
-            }
-        }
-
+        return this._completeLinkFlow({ plaid_response: response, account_id, customer_id, business_id, credentials });
     }
 
     /**
-     * Connect external account with OAuth.
+     * Complete OAuth flow at the redirect .
      * @param {String} identity Set identity token.
      * @param {String} authorization Set authorization token.
      */
@@ -196,8 +167,8 @@ class BondExternalAccounts {
         }: Credentials
     ) {
         const credentials: Credentials = {
-            identity: '7408c066-d0d0-48ae-84ae-0abca1d803ab',
-            authorization: 'x8T3IWnEzGteMC/ylo7kztaWNG0dd1i5oGLzknr6i6RUsbyVksA5++dOp912ohQB',
+            identity,
+            authorization,
         }
 
         const linkStr = localStorage.getItem('linkParams');
@@ -211,35 +182,7 @@ class BondExternalAccounts {
 
         const response = await this._initializePlaidLink(link_token, window.location.href);
 
-        if( (response as PlaidSuccessResponse).public_token ) {
-            const successResponse = response as PlaidSuccessResponse;
-            const public_token = successResponse.public_token;
-            const metadata = successResponse.metadata;
-            const external_account_id = metadata.account_id;
-            const payload = {
-                public_token,
-                external_account_id,
-                verification_status: metadata.account.verification_status || 'instantly_verified',
-                bank_name: metadata.institution.name,
-            }
-
-            await this._exchangingTokens(account_id, payload, credentials);
-
-            const externalAccounts = await this._getExternalAccounts(customer_id ? customer_id: business_id, credentials);
-            const linkedAccount = externalAccounts.find(account => account.linked_account_id == account_id);
-            return {
-                status: "linked",
-                linkedAccount: linkedAccount ? linkedAccount : null,
-                linkedAccountId: account_id,
-                externalAccounts: externalAccounts,
-            };
-        } else {
-            await this._deleteExternalAccount(account_id, credentials);
-            return {
-                status: "interrupted",
-                plaidResponse: (response as PlaidExitResponse),
-            }
-        }
+        return this._completeLinkFlow({ plaid_response: response, account_id, customer_id, business_id, credentials });
     }
 
     /**
@@ -418,6 +361,38 @@ class BondExternalAccounts {
         });
 
         return await res.json();
+    }
+
+    async _completeLinkFlow({ plaid_response, account_id, customer_id, business_id, credentials }) {
+        if( (plaid_response as PlaidSuccessResponse).public_token ) {
+            const successResponse = plaid_response as PlaidSuccessResponse;
+            const public_token = successResponse.public_token;
+            const metadata = successResponse.metadata;
+            const external_account_id = metadata.account_id;
+            const payload = {
+                public_token,
+                external_account_id,
+                verification_status: metadata.account.verification_status || 'instantly_verified',
+                bank_name: metadata.institution.name,
+            }
+
+            await this._exchangingTokens(account_id, payload, credentials);
+
+            const externalAccounts = await this._getExternalAccounts(customer_id ? customer_id: business_id, credentials);
+            const linkedAccount = externalAccounts.find(account => account.linked_account_id == account_id);
+            return {
+                status: "linked",
+                linkedAccount: linkedAccount ? linkedAccount : null,
+                linkedAccountId: account_id,
+                externalAccounts: externalAccounts,
+            };
+        } else {
+            await this._deleteExternalAccount(account_id, credentials);
+            return {
+                status: "interrupted",
+                plaidResponse: (plaid_response as PlaidExitResponse),
+            }
+        }
     }
 }
 

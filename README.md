@@ -246,7 +246,7 @@ const bondExternalAccounts = new BondExternalAccounts({ live: false});
 
 #### Linking account
 
-A ccount linking starts a flow to link an account through online identity verfication and account selectio. This can be done via OAuth with a two-step process. Please note that implementing an OAuth flow via the Bond SDK requires pre-registering a `redirectUri` with the Bond Support team and requires access `localStorage` access in the user's browser. Start this flow in your app with:
+Account linking starts a flow to link an account through online identity verfication and account selectio. This can be done via OAuth with a two-step process. Please note that implementing an OAuth flow via the Bond SDK requires pre-registering a `redirectUri` with the Bond Support team and requires access `localStorage` access in the user's browser. Start this flow in your app with:
 ```js
 bondExternalAccounts
   .linkAccount({
@@ -266,7 +266,7 @@ bondExternalAccounts
   })
 ```
 
-Alternatively, a non-OAuth account linking flow can be used with:
+Alternatively, a non-OAuth account linking flow can be initiated with:
 ```js
 bondExternalAccounts
   .linkAccount({

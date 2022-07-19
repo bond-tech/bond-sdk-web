@@ -246,11 +246,31 @@ const bondExternalAccounts = new BondExternalAccounts({ live: false});
 
 #### Linking account
 
-Account linking starts a flow to link an account through online identity verfication and account selection. Start this flow in your app with:
+A ccount linking starts a flow to link an account through online identity verfication and account selectio. This can be done via OAuth with a two-step process. Please note that implementing an OAuth flow via the Bond SDK requires pre-registering a `redirectUri` with the Bond Support team and requires access `localStorage` access in the user's browser. Start this flow in your app with:
 ```js
 bondExternalAccounts
   .linkAccount({
-    customer_id: CUSTOMER_ID, // or business_id: BUSINESS_ID
+    customerId: CUSTOMER_ID, // or business_id: BUSINESS_ID
+    identity: TEMP_IDENTITY_TOKEN,
+    authorization: TEMP_AUTH_TOKEN,
+    redirectUri: REGISTERED_REDIRECT_URI,
+  })
+```
+
+Once the OAuth flow is initiated, the user will be navigated to the selected institution's site to continue the verification process. Upon completion, they will be redirected back to the configured `redirectUri`. From this page, the SDK should be re-initialized to finalize the account linking:
+```js
+bondExternalAccounts
+  .handleOAuthRedirect({
+    identity: TEMP_IDENTITY_TOKEN,
+    authorization: TEMP_AUTH_TOKEN,
+  })
+```
+
+Alternatively, a non-OAuth account linking flow can be used with:
+```js
+bondExternalAccounts
+  .linkAccount({
+    customerId: CUSTOMER_ID, // or business_id: BUSINESS_ID
     identity: TEMP_IDENTITY_TOKEN,
     authorization: TEMP_AUTH_TOKEN,
   })

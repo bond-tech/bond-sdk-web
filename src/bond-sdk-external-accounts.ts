@@ -362,7 +362,7 @@ class BondExternalAccounts {
         return await res.json();
     }
 
-    async _completeLinkFlow({ plaid_response, account_id, customer_id, business_id, credentials }) {
+    async _completeLinkFlow({ plaid_response, account_id, customer_id, business_id, credentials }: {plaid_response: PlaidSuccessResponse | PlaidExitResponse, account_id: string, customer_id: string; business_id: string, credentials: Credentials}) {
         if( (plaid_response as PlaidSuccessResponse).public_token ) {
             const successResponse = plaid_response as PlaidSuccessResponse;
             const public_token = successResponse.public_token;

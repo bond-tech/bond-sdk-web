@@ -6,9 +6,14 @@ window.addEventListener('load', function() {
   const identity = process.env.IDENTITY;
   const authorization = process.env.AUTHORIZATION;
 
-  try {
-    bondExternalAccounts.handleOAuthRedirect({ identity, authorization });
-  } catch (e) {
-    console.log(e);
-  }
+  bondExternalAccounts.handleOAuthRedirect({
+    identity,
+    authorization,
+  })
+    .then(response => {
+      console.log(response);
+    })
+    .catch(error => {
+      console.error(error);
+    });
 })

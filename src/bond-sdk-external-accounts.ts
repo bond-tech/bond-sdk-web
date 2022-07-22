@@ -128,7 +128,7 @@ class BondExternalAccounts {
      * @param {String} identity Set identity token.
      * @param {String} authorization Set authorization token.
      */
-     async linkAccount({
+    async linkAccount({
         customerId: customer_id,
         businessId: business_id,
         redirectUri,

@@ -10,10 +10,13 @@ function handleClick() {
   const customerId = (<HTMLInputElement>document.getElementById('customerId')).value;
   const identity = process.env.IDENTITY;
   const authorization = process.env.AUTHORIZATION;
+  // redirectUri is required if using OAuth and must be pre-configured with the Bond support team
+  const redirectUri = 'http://localhost:8080/oauth-redirect.html';
 
   bondExternalAccounts.linkAccount({
     customerId,
     identity,
+    redirectUri,
     authorization,
   })
     .then(response => {

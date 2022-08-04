@@ -246,7 +246,7 @@ const bondExternalAccounts = new BondExternalAccounts({ live: false});
 
 #### Linking account
 
-Account linking starts a flow to connect an external account through online identity verfication and account selection. This can be done via OAuth with a two-step process. Please note that implementing an OAuth flow via the Bond SDK requires pre-registering a `redirectUri` with the [Bond Support team](mailto:support@bond.tech) and requires `localStorage` access within the user's browser. Alternatively, external accounts can be linked without the Bond SDK by following [this guide](https://docs.bond.tech/docs/linking-external-account-without-card-account). Initialize the Bond SDK flow in your app with:
+Account linking starts a flow to connect an external account through online identity verfication and account selection. This can be done via OAuth with a two-step process. Please note that implementing an OAuth flow via the Bond SDK requires pre-registering a `redirectUri` with the [Bond Support team](mailto:support@bond.tech) and requires `localStorage` access within the user's browser. External accounts can be linked without the Bond SDK by following [this guide](https://docs.bond.tech/docs/linking-external-account-without-card-account). Initialize the Bond SDK flow in your app with:
 ```js
 bondExternalAccounts
   .linkAccount({

@@ -8,8 +8,8 @@ btn.addEventListener('click', handleClick);
 
 function handleClick() {
   const customerId = (<HTMLInputElement>document.getElementById('customerId')).value;
-  const identity = process.env.IDENTITY;
-  const authorization = process.env.AUTHORIZATION;
+  const identity = '15febd7a-8193-45d5-80ce-5c85cb4baa8e';
+  const authorization = '0XCyTRL07k0vTCeZZZwAEelr+5VNcGCU3mEF4jAN4tJpX9XCFV1yMdzKLDlDvWQ2';
   // redirectUri is required if using OAuth and must be pre-configured with the Bond support team
   const redirectUri = 'http://localhost:8080/oauth-redirect.html';
 

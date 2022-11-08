@@ -294,7 +294,7 @@ bondExternalAccounts
 Delete linked external accounts with:
 ```js
 bondExternalAccounts
-  .microDeposit({
+  .deleteExternalAccount({
     accountId: LINKED_ACCOUNT_ID,
     identity: TEMP_IDENTITY_TOKEN,
     authorization: TEMP_AUTH_TOKEN,

@@ -469,7 +469,7 @@ class BondCards {
     autoFocus?: boolean;
     hideValue?: boolean;
   }) {
-    const validations: Array<ValidationType> = type === 'new_pin' ? ['required', '^[0-9]{4}$'] : [];
+    const validations: Array<ValidationType> = type === 'new_pin' ? ['required', '/^([0-9]{4})$/'] : [];
     if (type === 'confirm_pin')
       validations.push({
         type: 'compareValue',

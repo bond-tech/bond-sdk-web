@@ -518,18 +518,19 @@ class BondCards {
    * @return {Promise} Returns a Promise that, when fulfilled,
    * will either return an iFrame with the appropriate data or an error.
    */
-  copy({ iframe, htmlSelector, css = {}, text = 'Copy', callback = () => {} }: {
+  copy({ iframe, htmlSelector, css = {}, text = 'Copy', serializers = [], callback = () => {} }: {
     iframe: HTMLIFrameElement;
     htmlSelector: string;
     css?: {};
     text?: string;
+    serializers?: any[];
     callback?: (status: string) => void;
   }) {
     return new Promise((resolve, reject) => {
       try {
         const copyButton = this.internalShow.copyFrom(
           iframe,
-          { text },
+          { text, serializers },
           callback
         );
 
